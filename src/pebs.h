@@ -126,6 +126,15 @@
 // ==============================================================================
 
 
+/// Migration Effectiveness Guardrail
+// ==============================================================================
+#define MIG_EFF_BW_VAR_ALPHA     (0.2)   // EWMA alpha for baseline BW variance (noise floor)
+#define MIG_EFF_GAIN_ALPHA       (0.1)   // EWMA alpha for empirical BW-gain-per-migration model
+#define MIG_EFF_THRESHOLD        (2.0)   // Shortfall must exceed this many baseline_var units to flag
+#define MIG_EFF_MIN_MIGRATIONS   (5)     // Minimum migrations before checking
+// ==============================================================================
+
+
 /// Page migration
 // ==============================================================================
 #define CB_MULTIPLIER             (1.5)     // Cost-benefit multiplier

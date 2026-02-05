@@ -118,6 +118,16 @@ float latency_diff = UNLOADED_DRAM_LAT - UNLOADED_NVM_LAT;
 
 float min_score, max_score;
 
+// Migration effectiveness guardrail state
+float prev_dram_bw = 0.0;
+float prev_nvm_bw = 0.0;
+uint64_t mig_eff_migrations_since_bw_check = 0;
+float mig_eff_baseline_bw_var = 0.0;
+float mig_eff_gain_per_migration = 0.0;
+bool mig_eff_calibrated = false;
+uint64_t mig_eff_violations = 0;
+uint64_t mig_eff_checks = 0;
+
 //uint64_t global_clock = 0;
 
 uint64_t arms_pages_cnt = 0;
@@ -962,6 +972,44 @@ void *pebs_policy_thread()
       cur_dram_bw = ((float)(measure_bw(0)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
       cur_nvm_bw = ((float)(measure_bw(1)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
 
+      // --- Migration Effectiveness Guardrail ---
+      float dram_bw_delta = cur_dram_bw - prev_dram_bw;
+
+      if (prev_dram_bw > 0) {  // Skip the very first measurement (no previous to compare)
+        if (mig_eff_migrations_since_bw_check == 0) {
+          // No migrations: learn the noise floor
+          mig_eff_baseline_bw_var = (1 - MIG_EFF_BW_VAR_ALPHA) * mig_eff_baseline_bw_var
+                                   + MIG_EFF_BW_VAR_ALPHA * fabsf(dram_bw_delta);
+        } else if (mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
+          // Migrations happened: check effectiveness
+          if (mig_eff_calibrated && mig_eff_baseline_bw_var > 0) {
+            float expected_gain = mig_eff_gain_per_migration * mig_eff_migrations_since_bw_check;
+            float shortfall = expected_gain - dram_bw_delta;
+
+            if (shortfall > MIG_EFF_THRESHOLD * mig_eff_baseline_bw_var) {
+              mig_eff_violations++;
+              LOG_REPORT("MIG_EFF VIOLATION #%lu: %lu migrations, expected %.3f GB/s gain, actual %.3f GB/s (baseline var: %.3f)\n",
+                         mig_eff_violations, mig_eff_migrations_since_bw_check,
+                         expected_gain, dram_bw_delta, mig_eff_baseline_bw_var);
+            }
+            mig_eff_checks++;
+          }
+
+          // Learn from this interval: update gain-per-migration model if BW improved
+          if (dram_bw_delta > 0) {
+            float observed_gain = dram_bw_delta / mig_eff_migrations_since_bw_check;
+            mig_eff_gain_per_migration = (1 - MIG_EFF_GAIN_ALPHA) * mig_eff_gain_per_migration
+                                        + MIG_EFF_GAIN_ALPHA * observed_gain;
+            mig_eff_calibrated = true;
+          }
+        }
+      }
+
+      prev_dram_bw = cur_dram_bw;
+      prev_nvm_bw = cur_nvm_bw;
+      mig_eff_migrations_since_bw_check = 0;
+      // --- End Migration Effectiveness Guardrail ---
+
       // update the BW
       dram_bw_ewma = (1 - HCD_EWMA_ALPHA) * dram_bw_ewma + HCD_EWMA_ALPHA * cur_dram_bw;
       nvm_bw_ewma = (1 - HCD_EWMA_ALPHA) * nvm_bw_ewma + HCD_EWMA_ALPHA * cur_nvm_bw;
@@ -1259,6 +1307,7 @@ loop_end:
     ptimer_stop(&remaining_timer);
 
     LOG_REPORT("Migrated %lu pages (%lu bytes) in this interval\n", migrated_pages, migrated_bytes);
+    mig_eff_migrations_since_bw_check += num_migration_jobs;
     if (migrated_pages == 0) {
       // Reset the migration cost averages
       // TOOD: Think about the best way to reset migration costs
@@ -1545,6 +1594,9 @@ void pebs_stats()
           throttle_cnt,
           unthrottle_cnt,
           cools);
+  LOG_STATS("mig_eff: violations:[%lu/%lu] baseline_var:[%.3f] gain_per_mig:[%.3f] calibrated:[%d]\n",
+          mig_eff_violations, mig_eff_checks,
+          mig_eff_baseline_bw_var, mig_eff_gain_per_migration, mig_eff_calibrated);
   // arms_pages_cnt = total_pages_cnt =  throttle_cnt = unthrottle_cnt = 0;
 }
 
@@ -1585,5 +1637,10 @@ void pebs_print_config()
   LOG_REPORT("  =========================================\n");
   LOG_REPORT("  DEFAULT_SAMPLE_PERIOD: %d\n", DEFAULT_SAMPLE_PERIOD);
   LOG_REPORT("  HF_SAMPLE_PERIOD: %d\n", HF_SAMPLE_PERIOD);
+  LOG_REPORT("  =========================================\n");
+  LOG_REPORT("  MIG_EFF_BW_VAR_ALPHA: %f\n", MIG_EFF_BW_VAR_ALPHA);
+  LOG_REPORT("  MIG_EFF_GAIN_ALPHA: %f\n", MIG_EFF_GAIN_ALPHA);
+  LOG_REPORT("  MIG_EFF_THRESHOLD: %f\n", MIG_EFF_THRESHOLD);
+  LOG_REPORT("  MIG_EFF_MIN_MIGRATIONS: %d\n", MIG_EFF_MIN_MIGRATIONS);
   LOG_REPORT("  =========================================\n");
 }
