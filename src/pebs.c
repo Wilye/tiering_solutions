@@ -752,6 +752,9 @@ static size_t calculate_scores_map(struct score_entry *scores_out, const float *
 
 static inline int continue_migration(struct arms_page *hp, struct arms_page *cp)
 {
+#ifdef DISABLE_COST_BENEFIT
+  return 1;
+#endif
  // Compare the min of hot page and max of cold page
  // A hot page should hav all EWMAs greater than the max EWMA of a cold page
  float hot_page_min_avg = hp->w[0];
@@ -1191,6 +1194,7 @@ void *pebs_policy_thread()
         assert(!(np->present));
         ptimer_stop(&id_timer);
 
+#ifndef DISABLE_COST_BENEFIT
         // Cost-benefit analysis
         float cost = CB_MULTIPLIER * (promotion_cost_avg + demotion_cost_avg);
         float benefit = p->score * p->hot_age * HF_SAMPLE_PERIOD * latency_diff;
@@ -1200,6 +1204,7 @@ void *pebs_policy_thread()
           enqueue_fifo(&dram_free_list, np);
           break;
         }
+#endif
 
         LOG_DEBUG("Promoting freely at %lu: 0x%lx score: %f (%f %f)\n", promote_idx, p->va, p->score, p->w[0], p->w[1]);
 
