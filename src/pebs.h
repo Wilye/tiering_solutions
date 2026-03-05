@@ -143,7 +143,7 @@
 
 
 
-#define PERF_PAGES	(1 + (1 << 8))	// Has to be == 1+2^n, here 1MB
+#define PERF_PAGES	(1 + (1 << 10))	// Has to be == 1+2^n, here 1MB
 #define DEFAULT_SAMPLE_PERIOD	(10007)
 #define HF_SAMPLE_PERIOD	(5003)
 
