@@ -1570,7 +1570,7 @@ void pebs_stats()
           throttle_cnt,
           unthrottle_cnt,
           cools);
-  LOG_STATS("mig_eff: violations:[%lu]\n", mig_eff_violations);
+  LOG_STATS("mig_eff (migration effectiveness guardrail): violations:[%lu]\n", mig_eff_violations);
   // arms_pages_cnt = total_pages_cnt =  throttle_cnt = unthrottle_cnt = 0;
 }
 
