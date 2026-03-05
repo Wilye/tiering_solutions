@@ -126,9 +126,17 @@
 // ==============================================================================
 
 
-/// Migration Effectiveness Guardrail
+/// Migration Effectiveness Guardrail (end to end)
 // ==============================================================================
 #define MIG_EFF_MIN_MIGRATIONS   (5)     // Minimum migrations before checking
+// ==============================================================================
+
+
+/// Hotness Score Guardrail (local)
+// ==============================================================================
+#define HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS  (3)     // <= 3 intervals (~1.5s) is "short"
+#define HOTNESS_SCORE_MIN_COOLS                 (20)    // Batch size before checking
+#define HOTNESS_SCORE_VIOLATION_FRACTION        (0.20f) // Violation threshold (20%)
 // ==============================================================================
 
 

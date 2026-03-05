@@ -123,6 +123,11 @@ float prev_dram_bw = 0.0;
 uint64_t mig_eff_migrations_since_bw_check = 0;
 uint64_t mig_eff_violations = 0;
 
+// Hotness score guardrail state
+static uint64_t hotness_score_cools_in_batch = 0;
+static uint64_t hotness_score_short_in_batch = 0;
+uint64_t hotness_score_violations = 0;
+
 //uint64_t global_clock = 0;
 
 uint64_t arms_pages_cnt = 0;
@@ -1124,8 +1129,32 @@ void *pebs_policy_thread()
       }
     }
     for (int k = dramsize/PAGE_SIZE; k < s_pages_cnt; k++) {
-      scores[k].page->hot_age = 0;
-      scores[k].page->can_promote = false;
+      struct arms_page *p = scores[k].page;
+
+      // --- Hotness Score Guardrail ---
+      // Track DRAM pages that were hot last interval but just went cold.
+      // hot_age encodes how many consecutive intervals the page was in the top-N.
+      if (p->in_dram && p->hot_age > 0) {
+        hotness_score_cools_in_batch++;
+        if (p->hot_age <= HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS)
+          hotness_score_short_in_batch++;
+
+        if (hotness_score_cools_in_batch >= HOTNESS_SCORE_MIN_COOLS) {
+          float short_frac = (float)hotness_score_short_in_batch / hotness_score_cools_in_batch;
+          if (short_frac >= HOTNESS_SCORE_VIOLATION_FRACTION) {
+            hotness_score_violations++;
+            LOG_REPORT("HOTNESS_SCORE VIOLATION #%lu: %.1f%% of %lu cooled DRAM pages had hot lifetime <= %d intervals\n",
+                       hotness_score_violations, short_frac * 100.0f,
+                       hotness_score_cools_in_batch, HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS);
+          }
+          hotness_score_cools_in_batch = 0;
+          hotness_score_short_in_batch = 0;
+        }
+      }
+      // --- End Hotness Score Guardrail ---
+
+      p->hot_age = 0;
+      p->can_promote = false;
     }
 
     if (s_pages_cnt == 0) {
@@ -1571,6 +1600,7 @@ void pebs_stats()
           unthrottle_cnt,
           cools);
   LOG_STATS("mig_eff (migration effectiveness guardrail): violations:[%lu]\n", mig_eff_violations);
+  LOG_STATS("hotness_score (hotness score guardrail): violations:[%lu]\n", hotness_score_violations);
   // arms_pages_cnt = total_pages_cnt =  throttle_cnt = unthrottle_cnt = 0;
 }
 
