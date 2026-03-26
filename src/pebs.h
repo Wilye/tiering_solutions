@@ -134,9 +134,7 @@
 
 /// Hotness Score Guardrail (local)
 // ==============================================================================
-#define HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS  (3)     // <= 3 intervals (~1.5s) is "short"
-#define HOTNESS_SCORE_MIN_COOLS                 (20)    // Batch size before checking
-#define HOTNESS_SCORE_VIOLATION_FRACTION        (0.20f) // Violation threshold (20%)
+#define HOTNESS_SCORE_BOUNDARY_WINDOW  (100)   // Number of pages on each side of the boundary to compare
 // ==============================================================================
 
 
@@ -211,6 +209,7 @@ enum pbuftype {
 struct score_entry {
   struct arms_page* page;
   float score;
+  uint32_t raw_accesses;  // raw PEBS accesses for this interval (before EWMA)
 };
 
 void *pebs_kswapd();

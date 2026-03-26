@@ -124,8 +124,6 @@ uint64_t mig_eff_migrations_since_bw_check = 0;
 uint64_t mig_eff_violations = 0;
 
 // Hotness score guardrail state
-static uint64_t hotness_score_cools_in_batch = 0;
-static uint64_t hotness_score_short_in_batch = 0;
 uint64_t hotness_score_violations = 0;
 
 //uint64_t global_clock = 0;
@@ -668,9 +666,13 @@ static size_t calculate_scores_tree(struct score_entry *scores_out, const float 
     // Update the window with the smoothed access count
     update_window(page);
 
+    // Capture raw accesses (smoothed values in spatial smoothing path)
+    uint32_t raw = (uint32_t)(page->s_accesses[DRAMREAD] + page->s_accesses[NVMREAD]
+                 + (NVM_WRITES_WEIGHT * page->s_accesses[WRITE]));
+
     // Calculate the hotness score
     page->score = compute_score(page, bias);
-    scores_out[s_idx++] = (struct score_entry){ page, page->score };
+    scores_out[s_idx++] = (struct score_entry){ page, page->score, raw };
 
     // Append this page to the left neighbours
     ring_buf_put(l_neighbours, (uint64_t*)page);
@@ -739,6 +741,11 @@ static size_t calculate_scores_map(struct score_entry *scores_out, const float *
     // Update the window values
     update_window(page);
 
+    // Capture raw accesses before resetting (for guardrail)
+    uint32_t raw = page->accesses[DRAMREAD][prev_access_version]
+                 + page->accesses[NVMREAD][prev_access_version]
+                 + (NVM_WRITES_WEIGHT * page->accesses[WRITE][prev_access_version]); // C220G5 machine, writes and reads are symmetric, so weight is just 1
+
     // Reset the access counts
     page->accesses[DRAMREAD][prev_access_version] = 0;
     page->accesses[NVMREAD][prev_access_version] = 0;
@@ -747,7 +754,7 @@ static size_t calculate_scores_map(struct score_entry *scores_out, const float *
     // Calculate the hotness score
     page->prev_score = page->score;
     page->score = compute_score(page, bias);
-    scores_out[s_idx++] = (struct score_entry){ page, page->score };
+    scores_out[s_idx++] = (struct score_entry){ page, page->score, raw };
 
   }
   ptimer_print(&window_timer);
@@ -1118,7 +1125,8 @@ void *pebs_policy_thread()
     ptimer_stop_and_print(&sort_timer);
 
     // Set the top_since_iter for the top pages
-    for (int k = 0; k < dramsize/PAGE_SIZE && k < s_pages_cnt; k++) {
+    int boundary = dramsize / PAGE_SIZE;
+    for (int k = 0; k < boundary && k < s_pages_cnt; k++) {
       struct arms_page* top_page = scores[k].page;
       if (scores[k].score != 0) {
         top_page->hot_age++;
@@ -1128,34 +1136,51 @@ void *pebs_policy_thread()
         }
       }
     }
-    for (int k = dramsize/PAGE_SIZE; k < s_pages_cnt; k++) {
+    for (int k = boundary; k < s_pages_cnt; k++) {
       struct arms_page *p = scores[k].page;
-
-      // --- Hotness Score Guardrail ---
-      // Track DRAM pages that were hot last interval but just went cold.
-      // hot_age encodes how many consecutive intervals the page was in the top-N.
-      if (p->in_dram && p->hot_age > 0) {
-        hotness_score_cools_in_batch++;
-        if (p->hot_age <= HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS)
-          hotness_score_short_in_batch++;
-
-        if (hotness_score_cools_in_batch >= HOTNESS_SCORE_MIN_COOLS) {
-          float short_frac = (float)hotness_score_short_in_batch / hotness_score_cools_in_batch;
-          if (short_frac >= HOTNESS_SCORE_VIOLATION_FRACTION) {
-            hotness_score_violations++;
-            LOG_REPORT("HOTNESS_SCORE VIOLATION #%lu: %.1f%% of %lu cooled DRAM pages had hot lifetime <= %d intervals\n",
-                       hotness_score_violations, short_frac * 100.0f,
-                       hotness_score_cools_in_batch, HOTNESS_SCORE_SHORT_LIFETIME_INTERVALS);
-          }
-          hotness_score_cools_in_batch = 0;
-          hotness_score_short_in_batch = 0;
-        }
-      }
-      // --- End Hotness Score Guardrail ---
-
       p->hot_age = 0;
       p->can_promote = false;
     }
+
+    // --- Hotness Score Guardrail ---
+    // Compare raw accesses of the coldest DRAM pages (bottom of top-k)
+    // against the hottest NVM pages (top of not-top-k)
+    // If NVM-side pages have more accesses on average, the scoring is misranking
+    {
+      int window = HOTNESS_SCORE_BOUNDARY_WINDOW;
+      int dram_start = boundary - window;  // coldest DRAM pages
+      int nvm_end = boundary + window;     // hottest NVM pages
+
+      if (dram_start < 0) dram_start = 0; // if DRAM capacity is fewer than window size number of pages
+      if (nvm_end > s_pages_cnt) nvm_end = s_pages_cnt; // if there are fewer than window size number of pages in NVM
+
+      int dram_count = boundary - dram_start;
+      int nvm_count = nvm_end - boundary;
+
+      if (dram_count > 0 && nvm_count > 0) {
+        uint64_t dram_accesses_sum = 0;
+        uint64_t nvm_accesses_sum = 0;
+
+        for (int k = dram_start; k < boundary; k++) {
+          dram_accesses_sum += scores[k].raw_accesses;
+        }
+        for (int k = boundary; k < nvm_end; k++) {
+          nvm_accesses_sum += scores[k].raw_accesses;
+        }
+        float avg_dram = (float)dram_accesses_sum / dram_count;
+        float avg_nvm  = (float)nvm_accesses_sum / nvm_count;
+
+        LOG_REPORT("HOTNESS_SCORE boundary: avg_dram=%.2f (%d pages, sum=%lu), avg_nvm=%.2f (%d pages, sum=%lu)\n",
+                   avg_dram, dram_count, dram_accesses_sum, avg_nvm, nvm_count, nvm_accesses_sum);
+
+        if (avg_nvm > avg_dram) {
+          hotness_score_violations++;
+          LOG_REPORT("HOTNESS_SCORE VIOLATION #%lu: avg NVM accesses (%.2f, %d pages) > avg DRAM accesses (%.2f, %d pages) at boundary\n",
+                     hotness_score_violations, avg_nvm, nvm_count, avg_dram, dram_count);
+        }
+      }
+    }
+    // --- End Hotness Score Guardrail ---
 
     if (s_pages_cnt == 0) {
       goto loop_end;
