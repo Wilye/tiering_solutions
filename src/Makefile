@@ -63,5 +63,11 @@ fifo.o: fifo.c fifo.h arms.h
 spsc-ring.o: spsc-ring.c spsc-ring.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c spsc-ring.c
 
+no-guardrails: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_MIG_EFF_GUARDRAIL -DDISABLE_HOTNESS_SCORE_GUARDRAIL"
+
+no-cba: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_COST_BENEFIT"
+
 clean:
 	$(RM) *.o *.so policies/*.o
