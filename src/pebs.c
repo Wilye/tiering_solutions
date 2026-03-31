@@ -1310,7 +1310,10 @@ void *pebs_policy_thread()
 
       // try to find a free NVM page
       np = dequeue_fifo(&nvm_free_list);
-      assert(np != NULL);
+      if (np == NULL) {
+        // No more free NVM pages, so can't migrate this page
+        break;
+      }
       ptimer_stop(&id_timer);
 
       LOG_REPORT("Demoting at %ld: 0x%lx score: %f (%f %f)\n", demote_idx, cp->va, cp->score, cp->w[0], cp->w[1]);
