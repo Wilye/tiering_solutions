@@ -118,13 +118,17 @@ float latency_diff = UNLOADED_DRAM_LAT - UNLOADED_NVM_LAT;
 
 float min_score, max_score;
 
+#ifndef DISABLE_MIG_EFF_GUARDRAIL
 // Migration effectiveness guardrail state
 float prev_dram_bw = 0.0;
 uint64_t mig_eff_migrations_since_bw_check = 0;
 uint64_t mig_eff_violations = 0;
+#endif
 
+#ifndef DISABLE_HOTNESS_SCORE_GUARDRAIL
 // Hotness score guardrail state
 uint64_t hotness_score_violations = 0;
+#endif
 
 //uint64_t global_clock = 0;
 
@@ -982,6 +986,7 @@ void *pebs_policy_thread()
       cur_dram_bw = ((float)(measure_bw(0)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
       cur_nvm_bw = ((float)(measure_bw(1)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
 
+#ifndef DISABLE_MIG_EFF_GUARDRAIL
       // --- Migration Effectiveness Guardrail ---
       if (prev_dram_bw > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
         float dram_bw_delta = cur_dram_bw - prev_dram_bw;
@@ -995,6 +1000,7 @@ void *pebs_policy_thread()
       prev_dram_bw = cur_dram_bw;
       mig_eff_migrations_since_bw_check = 0;
       // --- End Migration Effectiveness Guardrail ---
+#endif
 
       // update the BW
       dram_bw_ewma = (1 - HCD_EWMA_ALPHA) * dram_bw_ewma + HCD_EWMA_ALPHA * cur_dram_bw;
@@ -1142,6 +1148,7 @@ void *pebs_policy_thread()
       p->can_promote = false;
     }
 
+#ifndef DISABLE_HOTNESS_SCORE_GUARDRAIL
     // --- Hotness Score Guardrail ---
     // Compare raw accesses of the coldest DRAM pages (bottom of top-k)
     // against the hottest NVM pages (top of not-top-k)
@@ -1181,6 +1188,7 @@ void *pebs_policy_thread()
       }
     }
     // --- End Hotness Score Guardrail ---
+#endif
 
     if (s_pages_cnt == 0) {
       goto loop_end;
@@ -1337,7 +1345,9 @@ loop_end:
     ptimer_stop(&remaining_timer);
 
     LOG_REPORT("Migrated %lu pages (%lu bytes) in this interval\n", migrated_pages, migrated_bytes);
+#ifndef DISABLE_MIG_EFF_GUARDRAIL
     mig_eff_migrations_since_bw_check += num_migration_jobs;
+#endif
     if (migrated_pages == 0) {
       // Reset the migration cost averages
       // TOOD: Think about the best way to reset migration costs
@@ -1624,8 +1634,12 @@ void pebs_stats()
           throttle_cnt,
           unthrottle_cnt,
           cools);
+#ifndef DISABLE_MIG_EFF_GUARDRAIL
   LOG_STATS("mig_eff (migration effectiveness guardrail): violations:[%lu]\n", mig_eff_violations);
+#endif
+#ifndef DISABLE_HOTNESS_SCORE_GUARDRAIL
   LOG_STATS("hotness_score (hotness score guardrail): violations:[%lu]\n", hotness_score_violations);
+#endif
   // arms_pages_cnt = total_pages_cnt =  throttle_cnt = unthrottle_cnt = 0;
 }
 
@@ -1667,6 +1681,8 @@ void pebs_print_config()
   LOG_REPORT("  DEFAULT_SAMPLE_PERIOD: %d\n", DEFAULT_SAMPLE_PERIOD);
   LOG_REPORT("  HF_SAMPLE_PERIOD: %d\n", HF_SAMPLE_PERIOD);
   LOG_REPORT("  =========================================\n");
+#ifndef DISABLE_MIG_EFF_GUARDRAIL
   LOG_REPORT("  MIG_EFF_MIN_MIGRATIONS: %d\n", MIG_EFF_MIN_MIGRATIONS);
+#endif
   LOG_REPORT("  =========================================\n");
 }
