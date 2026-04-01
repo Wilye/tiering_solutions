@@ -13,13 +13,18 @@ WORKLOADS = [
     ("xsbench",            "XSBench"),
     ("gapbs_bc_twitter",   "GapBS-BC"),
     ("silo_tpcc",          "Silo-TPCC"),
-    ("gapbs_pr_g25",       "GapBS-PR (g25)"),
     ("liblinear_kddb",     "Liblinear-kddb"),
     ("gapbs_pr_twitter",   "GapBS-PR (twitter)"),
 ]
 
 RATIOS = ["2-1", "1-1", "1-2", "1-4", "1-8", "1-16"]
 CBA_MODES = ["cba_on", "cba_off"]
+
+# Single color for all workloads (only one baseline: ARMS)
+COLOR = "#D5E8D4"
+EDGE_COLOR = "#82B366"
+HATCH = "/"
+MARKER = "o"
 
 def extract_violations(filepath):
     """Extract mig_eff and hotness_score violation counts from a log file."""
@@ -70,7 +75,7 @@ def plot_1_8_comparison(results):
             key = (workload, "1-8", cba)
             if key in results:
                 cba_label = "CBA On" if cba == "cba_on" else "CBA Off"
-                configs.append((f"{label}\n{cba_label}", key))
+                configs.append((f"{label}\n{cba_label}", key, workload))
 
     if not configs:
         print("No 1:8 data found, skipping 1:8 comparison plot.")
@@ -83,9 +88,6 @@ def plot_1_8_comparison(results):
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(max(14, n * 1.5), 5))
 
-    # Colors: alternate blue/orange for CBA on/off
-    colors = ['#4c72b0' if 'On' in l else '#dd8452' for l in labels]
-
     for ax, metric, title in [
         (ax1, 'mig_eff', 'Migration Effectiveness Violations'),
         (ax2, 'hotness_score', 'Hotness Score Violations'),
@@ -93,20 +95,24 @@ def plot_1_8_comparison(results):
         means = []
         stds = []
         all_vals = []
-        for _, key in configs:
+        for _, key, _ in configs:
             vals = results[key][metric] if key in results and results[key][metric] else []
             means.append(np.mean(vals) if vals else 0)
             stds.append(np.std(vals) if len(vals) > 1 else 0)
             all_vals.append(vals)
 
-        ax.bar(x, means, width, yerr=stds, capsize=5, color=colors)
+        for i in range(n):
+            ax.bar(x[i], means[i], width, yerr=stds[i], capsize=5,
+                   color=COLOR, edgecolor=EDGE_COLOR,
+                   hatch=HATCH, linewidth=1.2)
         ax.set_ylabel('Violation Count')
         ax.set_title(title)
         ax.set_xticks(x)
         ax.set_xticklabels(labels, fontsize=7)
 
         for i, vals in enumerate(all_vals):
-            ax.scatter([i] * len(vals), vals, color='black', zorder=5, s=20, alpha=0.7)
+            ax.scatter([i] * len(vals), vals, color=EDGE_COLOR,
+                       marker=MARKER, zorder=5, s=20, alpha=0.7)
 
     fig.suptitle('ARMS Guardrail Violations (1:8 Ratio)', fontsize=13, fontweight='bold')
     plt.tight_layout()
@@ -133,9 +139,9 @@ def plot_by_workload(results, workload, workload_label):
         (ax1, 'mig_eff', 'Migration Effectiveness Violations'),
         (ax2, 'hotness_score', 'Hotness Score Violations'),
     ]:
-        for j, (cba, color, label) in enumerate([
-            ('cba_on', '#4c72b0', 'CBA On'),
-            ('cba_off', '#dd8452', 'CBA Off'),
+        for j, (cba, label) in enumerate([
+            ('cba_on', 'CBA On'),
+            ('cba_off', 'CBA Off'),
         ]):
             means = []
             stds = []
@@ -153,13 +159,21 @@ def plot_by_workload(results, workload, workload_label):
                     all_vals.append([])
 
             offset = -width/2 + j * width
-            ax.bar(x + offset, means, width, yerr=stds, capsize=4,
-                   color=color, label=label, alpha=0.8)
+            # CBA On: filled with hatch; CBA Off: no fill (white), same hatch
+            if cba == 'cba_on':
+                ax.bar(x + offset, means, width, yerr=stds, capsize=4,
+                       color=COLOR, edgecolor=EDGE_COLOR,
+                       hatch=HATCH, linewidth=1.2, label=label, alpha=0.8)
+            else:
+                ax.bar(x + offset, means, width, yerr=stds, capsize=4,
+                       color='white', edgecolor=EDGE_COLOR,
+                       hatch=HATCH, linewidth=1.2, label=label, alpha=0.8)
 
             for i, vals in enumerate(all_vals):
                 if vals:
                     ax.scatter([x[i] + offset] * len(vals), vals,
-                             color='black', zorder=5, s=15, alpha=0.6)
+                             color=EDGE_COLOR, marker=MARKER,
+                             zorder=5, s=15, alpha=0.6)
 
         ax.set_ylabel('Violation Count')
         ax.set_title(title)

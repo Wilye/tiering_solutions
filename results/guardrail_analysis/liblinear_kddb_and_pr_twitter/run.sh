@@ -15,7 +15,7 @@ LIBLINEAR_NVMSIZE=20034093056   # 18.66 GiB
 PR_BIN="/mnt/data/gapbs_copy/gapbs/pr"
 PR_ARGS="-n 16 -f /mnt/data/gapbs_copy/gapbs/benchmark/graphs/twitter.sg"
 PR_DRAMSIZE=1470103552      # 1.37 GiB
-PR_NVMSIZE=11756634112      # 10.95 GiB
+PR_NVMSIZE=68719476736      # 64 GiB
 
 run_workload() {
     local name=$1
@@ -49,10 +49,10 @@ cd ${SRC_DIR}
 make clean && make
 echo ""
 
-for i in $(seq 1 ${NUM_RUNS}); do
-    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_on" ${i}
-done
+#for i in $(seq 1 ${NUM_RUNS}); do
+#    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
+#        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_on" ${i}
+#done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
@@ -66,10 +66,10 @@ cd ${SRC_DIR}
 make no-cba
 echo ""
 
-for i in $(seq 1 ${NUM_RUNS}); do
-    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_off" ${i}
-done
+#for i in $(seq 1 ${NUM_RUNS}); do
+#    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
+#        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_off" ${i}
+#done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
