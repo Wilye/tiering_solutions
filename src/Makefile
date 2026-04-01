@@ -69,5 +69,8 @@ no-guardrails: clean
 no-cba: clean
 	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_COST_BENEFIT"
 
+no-guardrails-no-cba: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_MIG_EFF_GUARDRAIL -DDISABLE_HOTNESS_SCORE_GUARDRAIL -DDISABLE_COST_BENEFIT"
+
 clean:
 	$(RM) *.o *.so policies/*.o

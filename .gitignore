@@ -19,6 +19,5 @@ memsim/mmgr_linux
 memsim/mmgr_simple_mmm
 memsim/mmgr_hemem
 logs/
-results/
 scripts/
 *tags

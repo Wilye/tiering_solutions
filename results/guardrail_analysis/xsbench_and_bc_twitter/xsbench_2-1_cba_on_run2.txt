@@ -1,0 +1,2054 @@
+MIN_INTERPOSE_MEM_SIZE: 1073741824
+DRAMSIZE: 46502248448
+NVMSIZE: 23255318528
+[Tree] elapsed: 2.42 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.03 ms
+[Sort] elapsed: 0.05 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 2.62 ms
+mem_allocated: [687865856]	dram_small_allocation_bytes: [134217728]	pages_allocated: [328]	missing_faults_handled: [328]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[2584/2584] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.65 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.05 ms
+[Sort] elapsed: 0.12 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 1.21 ms
+[Tree] elapsed: 1.52 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.12 ms
+[Sort] elapsed: 0.19 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 1.94 ms
+mem_allocated: [1476395008]	dram_small_allocation_bytes: [134217728]	pages_allocated: [704]	missing_faults_handled: [704]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[7749/7749] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+PEBS configuration:
+  =========================================
+  NUM_MIGRATION_THREADS: 8
+  PEBS_NPROCS: 30
+  NVM_RD_BW_KNEE: 15
+  NVM_WR_BW_KNEE: 15
+  NVM_BW_SLOPE: 0.090000
+  NVM_WRITES_WEIGHT: 1
+  MIN_PROMOTION_COST: 636
+  MIN_DEMOTION_COST: 636
+  =========================================
+  PEBS_KSWAPD_INTERVAL_BIG: 500000
+  PEBS_KSWAPD_INTERVAL_SMALL: 100000
+  =========================================
+  WINDOW_SIZE: 2
+  HIST_BIAS: {0.400000, 0.600000}
+  RECN_BIAS: {0.731000, 0.269000}
+  SHORT_TERM_WND_PERIOD_MS: 1000
+  LONG_TERM_WND_PERIOD_MS: 10000
+  W_EWMA_ALPHA: {0.666667, 0.095238}
+  =========================================
+  HCD_EWMA_ALPHA: 0.100000
+  HCD_STD_ALPHA: 0.200000
+  HCD_RECN_MAX_PERIODS: 20
+  HCD_RECN_MIN_NVM_BW: 0.300000
+  HCD_PH_DRIFT: 0.500000
+  HCD_PH_THRESHOLD: 6.000000
+  =========================================
+  CB_MULTIPLIER: 1.500000
+  MIGRATION_COST_DECAY_RATE: 1.500000
+  MIGRATION_WINDOW_SIZE: 20
+  MIGRATION_COST_ALPHA: 0.095238
+  =========================================
+  DEFAULT_SAMPLE_PERIOD: 10007
+  HF_SAMPLE_PERIOD: 5003
+  =========================================
+  MIG_EFF_MIN_MIGRATIONS: 5
+  =========================================
+w_ewma_alpha[0] = 0.666667
+w_ewma_alpha[1] = 0.095238
+hist_bias[0] = 0.400000
+hist_bias[1] = 0.600000
+recn_bias[0] = 0.731000
+recn_bias[1] = 0.269000
+================================================================================
+                   __   __ ___________                 _                        
+                   \ \ / //  ___| ___ \               | |                       
+                    \ V / \ `--.| |_/ / ___ _ __   ___| |__                     
+                    /   \  `--. \ ___ \/ _ \ '_ \ / __| '_ \                    
+                   / /^\ \/\__/ / |_/ /  __/ | | | (__| | | |                   
+                   \/   \/\____/\____/ \___|_| |_|\___|_| |_|                   
+
+================================================================================
+                    Developed at Argonne National Laboratory
+                                   Version: 20
+================================================================================
+                                  INPUT SUMMARY
+================================================================================
+Simulation Method:            History Based
+Grid Type:                    Unionized Grid
+Materials:                    12
+H-M Benchmark Size:           large
+Total Nuclides:               355
+Gridpoints (per Nuclide):     130,000
+Unionized Energy Gridpoints:  46,150,000
+Particle Histories:           20,000,000
+XS Lookups per Particle:      34
+Total XS Lookups:             34
+Threads:                      12
+Est. Memory Usage (MB):       64,962
+Binary File Mode:             Off
+================================================================================
+                         INITIALIZATION - DO NOT PROFILE
+================================================================================
+Intializing nuclide grids...
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 9.067 (18.667 2.667)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.016173, NVM bw EWMA: 0.001617, NVM bw stddev: 0.006510, cusum: 0.011301
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 9.067 (18.667 2.667)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 9.067 (18.667 2.667)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.015343, NVM bw EWMA: 0.002990, NVM bw stddev: 0.008026, [Tree] elapsed: 1.62 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.07 ms
+[Sort] elapsed: 0.23 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 2.17 ms
+[Tree] elapsed: 3.49 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.33 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 4.04 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[12312/12592] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 1.55 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.35 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 2.21 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.06 ms
+[Sort] elapsed: 0.19 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.31 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[13271/38109] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.37 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.67 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.37 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.58 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[14234/63626] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.13 ms
+[Sort] elapsed: 0.38 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.71 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.38 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.59 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[15313/89143] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.28 ms
+[Sort] elapsed: 0.41 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.89 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.40 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.61 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[16283/114660] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.39 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.69 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.40 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.62 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[17288/140177] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.12 ms
+[Sort] elapsed: 0.40 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.72 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.07 ms
+[Sort] elapsed: 0.22 ms
+cusum: 0.019641
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 9.067 (18.667 2.667)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 9.067 (18.667 2.667)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012000, NVM bw EWMA: 0.003891, NVM bw stddev: 0.008043, cusum: 0.023729
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 9.714 (20.000 2.857)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 10.362 (21.333 3.048)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012364, NVM bw EWMA: 0.004738, NVM bw stddev: 0.007961, cusum: 0.027374
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 13.009 (26.667 3.904)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 10.382 (20.003 3.969)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.019110, NVM bw EWMA: 0.006175, NVM bw stddev: 0.009174, cusum: 0.035722
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 13.621 (26.669 4.921)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 13.556 (26.668 4.816)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.015386, NVM bw EWMA: 0.007096, NVM bw stddev: 0.009004, cusum: 0.039509
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 14.146 (28.000 4.910)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 10.908 (21.334 3.958)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.014727, NVM bw EWMA: 0.007859, NVM bw stddev: 0.008619, cusum: 0.042067
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 14.094 (28.000 4.823)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 11.457 (22.667 3.983)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013846, NVM bw EWMA: 0.008458, NVM bw stddev: 0.008077, cusum: 0.043416
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 12.062 (24.000 4.103)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.37 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[18329/166017] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.41 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.70 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.65 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[19375/191534] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.44 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.74 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.46 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.67 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[20299/217051] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.44 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.74 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.11 ms
+[Sort] elapsed: 0.44 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.65 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [136298496]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[21360/242891] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.73 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.26 ms
+[Sort] elapsed: 0.44 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.82 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [505499648]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[22960/265501] throttle/unthrottle_cnt:[0/0] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.43 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.73 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.34 ms
+[Sort] elapsed: 0.46 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.91 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[24153/312013] throttle/unthrottle_cnt:[7/7] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.70 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.43 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.63 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[24153/361755] throttle/unthrottle_cnt:[13/13] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+000 (0.000 0.000), max_score: 14.004 (28.000 4.674)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013035, NVM bw EWMA: 0.008916, NVM bw stddev: 0.007456, cusum: 0.043808
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 11.347 (22.667 3.801)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 11.988 (24.000 3.980)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012233, NVM bw EWMA: 0.009248, NVM bw stddev: 0.006801, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 10.693 (21.333 3.599)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 11.309 (22.667 3.737)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012697, NVM bw EWMA: 0.009592, NVM bw stddev: 0.006239, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.051 (0.000 0.085), max_score: 13.223 (26.667 4.261)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.046 (0.000 0.077), max_score: 13.845 (28.000 4.409)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.015084, NVM bw EWMA: 0.010142, NVM bw stddev: 0.006002, cusum: 0.001941
+Estimated latency diff: 0.15 us
+min_score: 0.042 (0.000 0.069), max_score: 11.902 (24.000 3.837)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.038 (0.000 0.063), max_score: 9.936 (20.000 3.227)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+Intializing unionized grid...
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.016526, NVM bw EWMA: 0.010780, NVM bw stddev: 0.005952, cusum: 0.004711
+Estimated latency diff: 0.15 us
+min_score: 0.495 (0.148 0.726), max_score: 11.873 (24.000 3.789)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.337 (0.444 0.265), max_score: 6.552 (10.667 3.809)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.009432, NVM bw EWMA: 0.010645, NVM bw stddev: 0.005351, cusum: 0.000822
+Estimated latency diff: 0.15 us
+min_score: 0.203 (0.148 0.240), max_score: 3.490 (3.556 3.446)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.150 (0.049 0.217), max_score: 2.345 (1.185 3.118)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.008689, NVM bw EWMA: 0.010450, NVM bw[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.43 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.75 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.63 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[24153/405683] throttle/unthrottle_cnt:[17/17] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.86 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.64 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[24153/457137] throttle/unthrottle_cnt:[23/23] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.71 ms
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.43 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.63 ms
+mem_allocated: [2216689664]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1057]	missing_faults_handled: [1057]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[24153/497738] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.00 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.10 ms
+[Sort] elapsed: 0.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 0.71 ms
+[Tree] elapsed: 0.12 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.29 ms
+[Sort] elapsed: 0.51 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 1.04 ms
+mem_allocated: [2659188736]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1268]	missing_faults_handled: [1268]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[34745/517117] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.73 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.12 ms
+[Sort] elapsed: 0.39 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 1.40 ms
+[Tree] elapsed: 2.10 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.14 ms
+[Sort] elapsed: 0.64 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 2.99 ms
+mem_allocated: [3458203648]	dram_small_allocation_bytes: [874700800]	pages_allocated: [1649]	missing_faults_handled: [1649]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[54318/537138] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 5.85 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.20 ms
+[Sort] elapsed: 0.72 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.98 ms
+[Tree] elapsed: 2.57 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.21 ms
+[Sort] elapsed: 0.79 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 3.69 ms
+mem_allocated: [4259315712]	dram_small_allocation_bytes: [874700800]	pages_allocated: [2031]	missing_faults_handled: [2031]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[74217/557486] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 3.24 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.24 ms
+[Sort] elapsed: 0.87 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 4.56 ms
+ stddev: 0.004851, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.125 (0.016 0.197), max_score: 1.851 (0.395 2.821)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.109 (0.005 0.178), max_score: 1.584 (0.132 2.552)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.007952, NVM bw EWMA: 0.010200, NVM bw stddev: 0.004453, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.097 (0.002 0.161), max_score: 1.403 (0.044 2.309)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.088 (0.001 0.146), max_score: 1.259 (0.015 2.089)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.008281, NVM bw EWMA: 0.010008, NVM bw stddev: 0.004057, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.079 (0.000 0.132), max_score: 1.136 (0.005 1.890)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.072 (0.000 0.119), max_score: 1.027 (0.002 1.710)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.007073, NVM bw EWMA: 0.009714, NVM bw stddev: 0.003817, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.065 (0.000 0.108), max_score: 0.929 (0.001 1.547)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012808, NVM bw EWMA: 0.010024, NVM bw stddev: 0.003634, cusum: 0.000967
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010356, NVM bw EWMA: 0.010057, NVM bw stddev: 0.003253, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010183, NVM bw EWMA: 0.010070, NVM bw stddev: 0.002910, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================[Tree] elapsed: 3.98 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.23 ms
+[Sort] elapsed: 0.98 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 5.38 ms
+mem_allocated: [5058330624]	dram_small_allocation_bytes: [874700800]	pages_allocated: [2412]	missing_faults_handled: [2412]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[93831/577505] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 4.62 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.28 ms
+[Sort] elapsed: 1.05 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.18 ms
+[Tree] elapsed: 5.18 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.30 ms
+[Sort] elapsed: 1.13 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.75 ms
+mem_allocated: [5842665472]	dram_small_allocation_bytes: [874700800]	pages_allocated: [2786]	missing_faults_handled: [2786]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[113110/597203] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 5.89 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.28 ms
+[Sort] elapsed: 1.29 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 7.69 ms
+[Tree] elapsed: 6.59 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.40 ms
+[Sort] elapsed: 1.01 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 8.14 ms
+mem_allocated: [6616514560]	dram_small_allocation_bytes: [874700800]	pages_allocated: [3154]	missing_faults_handled: [3154]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[132063/616577] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 19.53 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.26 ms
+[Sort] elapsed: 0.92 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 20.89 ms
+[Tree] elapsed: 6.16 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.74 ms
+[Sort] elapsed: 1.51 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 8.58 ms
+mem_allocated: [7388266496]	dram_small_allocation_bytes: [874700800]	pages_allocated: [3523]	missing_faults_handled: [3523]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[151169/636097] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 6.85 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.40 ms
+[Sort] elapsed: 1.59 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 9.08 ms
+[Tree] elapsed: 6.35 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.40 ms
+[Sort] elapsed: 1.66 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 8.57 ms
+mem_allocated: [8162115584]	dram_small_allocation_bytes: [874700800]	pages_allocated: [3892]	missing_faults_handled: [3892]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[170294/655972] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 0.59 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.45 ms
+[Sort] elapsed: 1.73 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 3.00 ms
+[Tree] elapsed: 1.60 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.49 ms
+[Sort] elapsed: 1.82 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 4.08 ms
+mem_allocated: [8965324800]	dram_small_allocation_bytes: [874700800]	pages_allocated: [4275]	missing_faults_handled: [4275]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[189862/676638] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 2.49 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.48 ms
+[Sort] elapsed: 1.96 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 5.18 ms
+[Tree] elapsed: 3.35 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.53 ms
+[Sort] elapsed: 2.01 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.04 ms
+mem_allocated: [9755951104]	dram_small_allocation_bytes: [874700800]	pages_allocated: [4652]	missing_faults_handled: [4652]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[209450/696661] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010409, NVM bw EWMA: 0.010104, NVM bw stddev: 0.002606, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010291, NVM bw EWMA: 0.010122, NVM bw stddev: 0.002332, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.009975, NVM bw EWMA: 0.010108, NVM bw stddev: 0.002087, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010743, NVM bw EWMA: 0.010171, NVM bw stddev: 0.001884, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013035, NVM bw EWMA: 0.010458, NVM bw stddev: 0.002042, cusum: 0.001557
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.014098, NVM bw EWMA: 0.010822, NVM bw stddev: 0.002341, cusum: 0.003663
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011124, NVM bw EWMA: 0.010852, NVM[Tree] elapsed: 4.31 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.49 ms
+[Sort] elapsed: 2.11 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 7.22 ms
+[Tree] elapsed: 5.13 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.62 ms
+[Sort] elapsed: 1.25 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 7.14 ms
+mem_allocated: [10548674560]	dram_small_allocation_bytes: [874700800]	pages_allocated: [5030]	missing_faults_handled: [5030]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[228960/716601] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 6.04 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.54 ms
+[Sort] elapsed: 2.32 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 9.19 ms
+[Tree] elapsed: 6.76 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.54 ms
+[Sort] elapsed: 2.35 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 9.80 ms
+mem_allocated: [11324620800]	dram_small_allocation_bytes: [874700800]	pages_allocated: [5400]	missing_faults_handled: [5400]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[248015/736065] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 7.58 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.56 ms
+[Sort] elapsed: 2.48 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 10.95 ms
+[Tree] elapsed: 8.06 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.54 ms
+[Sort] elapsed: 2.55 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 11.35 ms
+mem_allocated: [12067012608]	dram_small_allocation_bytes: [874700800]	pages_allocated: [5754]	missing_faults_handled: [5754]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[266347/754794] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 8.57 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.54 ms
+[Sort] elapsed: 2.67 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.07 ms
+[Tree] elapsed: 9.17 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.56 ms
+[Sort] elapsed: 2.74 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.67 ms
+mem_allocated: [12769558528]	dram_small_allocation_bytes: [874700800]	pages_allocated: [6089]	missing_faults_handled: [6089]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[283413/772229] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 9.69 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.52 ms
+[Sort] elapsed: 2.23 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.70 ms
+[Tree] elapsed: 10.40 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.74 ms
+[Sort] elapsed: 1.96 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 13.27 ms
+mem_allocated: [13455327232]	dram_small_allocation_bytes: [874700800]	pages_allocated: [6416]	missing_faults_handled: [6416]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[300487/789666] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 32.86 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.43 ms
+[Sort] elapsed: 1.11 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 34.61 ms
+[Tree] elapsed: 4.16 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.56 ms
+[Sort] elapsed: 1.12 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 5.96 ms
+mem_allocated: [14187233280]	dram_small_allocation_bytes: [874700800]	pages_allocated: [6765]	missing_faults_handled: [6765]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[318537/808397] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 8.77 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.79 ms
+[Sort] elapsed: 3.28 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 13.13 ms
+ bw stddev: 0.002098, cusum: 0.002886
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011256, NVM bw EWMA: 0.010892, NVM bw stddev: 0.001883, cusum: 0.002308
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010823, NVM bw EWMA: 0.010885, NVM bw stddev: 0.001685, cusum: 0.001404
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011088, NVM bw EWMA: 0.010906, NVM bw stddev: 0.001509, cusum: 0.000832
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011101, NVM bw EWMA: 0.010925, NVM bw stddev: 0.001352, cusum: 0.000332
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012091, NVM bw EWMA: 0.011042, NVM bw stddev: 0.001297, cusum: 0.000733
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013727, NVM bw EWMA: 0.011310, NVM bw stddev: 0.001586, cusum: 0.002356
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+================[Tree] elapsed: 9.08 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.68 ms
+[Sort] elapsed: 2.58 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.58 ms
+mem_allocated: [14898167808]	dram_small_allocation_bytes: [874700800]	pages_allocated: [7104]	missing_faults_handled: [7104]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[335911/826484] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 9.39 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.76 ms
+[Sort] elapsed: 2.48 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.89 ms
+[Tree] elapsed: 10.11 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.79 ms
+[Sort] elapsed: 3.23 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.30 ms
+mem_allocated: [15596519424]	dram_small_allocation_bytes: [874700800]	pages_allocated: [7437]	missing_faults_handled: [7437]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[352970/844242] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 10.27 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.79 ms
+[Sort] elapsed: 3.49 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.86 ms
+[Tree] elapsed: 10.66 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.78 ms
+[Sort] elapsed: 3.55 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.21 ms
+mem_allocated: [16278093824]	dram_small_allocation_bytes: [874700800]	pages_allocated: [7762]	missing_faults_handled: [7762]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[369717/861358] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 10.82 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.72 ms
+[Sort] elapsed: 2.93 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.77 ms
+[Tree] elapsed: 1.87 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.86 ms
+[Sort] elapsed: 3.73 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.70 ms
+mem_allocated: [17043554304]	dram_small_allocation_bytes: [874700800]	pages_allocated: [8127]	missing_faults_handled: [8127]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[388704/880733] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 1.37 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.86 ms
+[Sort] elapsed: 3.80 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 6.36 ms
+[Tree] elapsed: 2.26 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.99 ms
+[Sort] elapsed: 3.93 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 7.45 ms
+mem_allocated: [17846763520]	dram_small_allocation_bytes: [874700800]	pages_allocated: [8510]	missing_faults_handled: [8510]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[408640/901080] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 3.32 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.94 ms
+[Sort] elapsed: 4.01 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 8.60 ms
+[Tree] elapsed: 4.18 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.91 ms
+[Sort] elapsed: 4.13 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 9.48 ms
+mem_allocated: [18641584128]	dram_small_allocation_bytes: [874700800]	pages_allocated: [8889]	missing_faults_handled: [8889]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[428185/921051] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 5.12 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.88 ms
+[Sort] elapsed: 4.22 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 10.57 ms
+[Tree] elapsed: 2.25 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.54 ms
+[Sort] elapsed: 1.83 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 4.79 ms
+mem_allocated: [19419627520]	dram_small_allocation_bytes: [874700800]	pages_allocated: [9260]	missing_faults_handled: [9260]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[447198/940473] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+========================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013003, NVM bw EWMA: 0.011480, NVM bw stddev: 0.001573, cusum: 0.003093
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012362, NVM bw EWMA: 0.011568, NVM bw stddev: 0.001451, cusum: 0.003162
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010378, NVM bw EWMA: 0.011449, NVM bw stddev: 0.001384, cusum: 0.001399
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.010797, NVM bw EWMA: 0.011384, NVM bw stddev: 0.001265, cusum: 0.000180
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012608, NVM bw EWMA: 0.011506, NVM bw stddev: 0.001234, cusum: 0.000665
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012303, NVM bw EWMA: 0.011586, NVM bw stddev: 0.001149, cusum: 0.000807
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.013509, NV[Tree] elapsed: 6.88 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.99 ms
+[Sort] elapsed: 4.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.71 ms
+[Tree] elapsed: 7.55 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.92 ms
+[Sort] elapsed: 4.07 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.80 ms
+mem_allocated: [20176699392]	dram_small_allocation_bytes: [874700800]	pages_allocated: [9621]	missing_faults_handled: [9621]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[465841/959523] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 8.46 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.94 ms
+[Sort] elapsed: 3.38 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 13.09 ms
+[Tree] elapsed: 8.92 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.94 ms
+[Sort] elapsed: 3.92 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 13.99 ms
+mem_allocated: [20910702592]	dram_small_allocation_bytes: [874700800]	pages_allocated: [9971]	missing_faults_handled: [9971]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[483849/977932] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 9.74 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.95 ms
+[Sort] elapsed: 4.69 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.68 ms
+[Tree] elapsed: 9.94 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.94 ms
+[Sort] elapsed: 4.84 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 16.02 ms
+mem_allocated: [21609054208]	dram_small_allocation_bytes: [874700800]	pages_allocated: [10304]	missing_faults_handled: [10304]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[501020/995489] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 10.58 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.93 ms
+[Sort] elapsed: 4.40 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 16.30 ms
+[Tree] elapsed: 11.13 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.80 ms
+[Sort] elapsed: 3.63 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.79 ms
+mem_allocated: [22296920064]	dram_small_allocation_bytes: [874700800]	pages_allocated: [10632]	missing_faults_handled: [10632]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[517950/1012810] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 12.18 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.87 ms
+[Sort] elapsed: 3.16 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 16.53 ms
+[Tree] elapsed: 12.15 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.97 ms
+[Sort] elapsed: 3.83 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 17.18 ms
+mem_allocated: [22953328640]	dram_small_allocation_bytes: [874700800]	pages_allocated: [10945]	missing_faults_handled: [10945]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[534056/1029277] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 12.52 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.97 ms
+[Sort] elapsed: 4.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.24 ms
+[Tree] elapsed: 12.74 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.92 ms
+[Sort] elapsed: 4.78 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.73 ms
+mem_allocated: [23595057152]	dram_small_allocation_bytes: [874700800]	pages_allocated: [11251]	missing_faults_handled: [11251]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[549852/1045422] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 12.48 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.79 ms
+[Sort] elapsed: 3.63 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 17.23 ms
+M bw EWMA: 0.011778, NVM bw stddev: 0.001287, cusum: 0.001894
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011932, NVM bw EWMA: 0.011793, NVM bw stddev: 0.001153, cusum: 0.001456
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012169, NVM bw EWMA: 0.011831, NVM bw stddev: 0.001042, cusum: 0.001273
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011877, NVM bw EWMA: 0.011836, NVM bw stddev: 0.000932, cusum: 0.000848
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012132, NVM bw EWMA: 0.011865, NVM bw stddev: 0.000842, cusum: 0.000694
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011040, NVM bw EWMA: 0.011783, NVM bw stddev: 0.000823, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011923, NVM bw EWMA: 0.011797, NVM bw stddev: 0.000739, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new i[Tree] elapsed: 13.33 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.72 ms
+[Sort] elapsed: 3.40 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 17.76 ms
+mem_allocated: [24220008448]	dram_small_allocation_bytes: [874700800]	pages_allocated: [11549]	missing_faults_handled: [11549]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[565326/1061247] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 14.71 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.75 ms
+[Sort] elapsed: 3.46 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 19.25 ms
+[Tree] elapsed: 15.26 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.96 ms
+[Sort] elapsed: 3.48 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 19.95 ms
+mem_allocated: [24847056896]	dram_small_allocation_bytes: [874700800]	pages_allocated: [11848]	missing_faults_handled: [11848]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[580815/1077069] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 14.78 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.97 ms
+[Sort] elapsed: 4.26 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 20.33 ms
+[Tree] elapsed: 4.10 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.09 ms
+[Sort] elapsed: 5.52 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 10.98 ms
+mem_allocated: [25587351552]	dram_small_allocation_bytes: [874700800]	pages_allocated: [12201]	missing_faults_handled: [12201]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[598818/1095480] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 2.13 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.07 ms
+[Sort] elapsed: 5.94 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 9.59 ms
+[Tree] elapsed: 3.86 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.08 ms
+[Sort] elapsed: 6.08 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 11.38 ms
+mem_allocated: [26373783552]	dram_small_allocation_bytes: [874700800]	pages_allocated: [12576]	missing_faults_handled: [12576]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[618161/1115271] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 5.06 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.14 ms
+[Sort] elapsed: 6.14 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.81 ms
+[Tree] elapsed: 57.34 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 0.68 ms
+[Sort] elapsed: 1.80 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 59.99 ms
+mem_allocated: [27126661120]	dram_small_allocation_bytes: [874700800]	pages_allocated: [12935]	missing_faults_handled: [12935]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[636684/1134227] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 3.37 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.31 ms
+[Sort] elapsed: 5.95 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 11.01 ms
+[Tree] elapsed: 4.50 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.32 ms
+[Sort] elapsed: 6.06 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.16 ms
+mem_allocated: [27921481728]	dram_small_allocation_bytes: [874700800]	pages_allocated: [13314]	missing_faults_handled: [13314]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[656253/1154246] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 5.24 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.35 ms
+[Sort] elapsed: 6.51 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 13.59 ms
+[Tree] elapsed: 5.99 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.31 ms
+[Sort] elapsed: 6.62 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.33 ms
+mem_allocated: [28707913728]	dram_small_allocation_bytes: [874700800]	pages_allocated: [13689]	missing_faults_handled: [13689]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[675559/1173945] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+nterval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011460, NVM bw EWMA: 0.011763, NVM bw stddev: 0.000674, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012487, NVM bw EWMA: 0.011835, NVM bw stddev: 0.000670, cusum: 0.000316
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011458, NVM bw EWMA: 0.011798, NVM bw stddev: 0.000618, cusum: 0.000000
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012373, NVM bw EWMA: 0.011855, NVM bw stddev: 0.000599, cusum: 0.000218
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012538, NVM bw EWMA: 0.011924, NVM bw stddev: 0.000602, cusum: 0.000532
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012753, NVM bw EWMA: 0.012006, NVM bw stddev: 0.000634, cusum: 0.000961
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+=====================================[Tree] elapsed: 6.69 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.39 ms
+[Sort] elapsed: 6.69 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.31 ms
+[Tree] elapsed: 7.26 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.38 ms
+[Sort] elapsed: 5.42 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.37 ms
+mem_allocated: [29471277056]	dram_small_allocation_bytes: [874700800]	pages_allocated: [14052]	missing_faults_handled: [14052]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[694473/1193274] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 7.85 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.42 ms
+[Sort] elapsed: 5.11 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.76 ms
+[Tree] elapsed: 8.29 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.37 ms
+[Sort] elapsed: 5.88 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.82 ms
+mem_allocated: [30194794496]	dram_small_allocation_bytes: [874700800]	pages_allocated: [14398]	missing_faults_handled: [14398]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[712265/1211402] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 8.82 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.44 ms
+[Sort] elapsed: 6.65 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 17.29 ms
+[Tree] elapsed: 9.35 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 2.81 ms
+[Sort] elapsed: 6.31 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.81 ms
+mem_allocated: [30901534720]	dram_small_allocation_bytes: [874700800]	pages_allocated: [14735]	missing_faults_handled: [14735]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[729661/1229166] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 9.78 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.21 ms
+[Sort] elapsed: 5.22 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 16.80 ms
+[Tree] elapsed: 10.33 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.41 ms
+[Sort] elapsed: 4.67 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 16.73 ms
+mem_allocated: [31593594880]	dram_small_allocation_bytes: [874700800]	pages_allocated: [15065]	missing_faults_handled: [15065]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[746699/1246604] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 10.86 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.43 ms
+[Sort] elapsed: 5.21 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 17.89 ms
+[Tree] elapsed: 11.30 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.44 ms
+[Sort] elapsed: 5.80 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.87 ms
+mem_allocated: [32277266432]	dram_small_allocation_bytes: [874700800]	pages_allocated: [15391]	missing_faults_handled: [15391]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[763487/1263720] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 11.69 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.41 ms
+[Sort] elapsed: 6.24 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 19.73 ms
+[Tree] elapsed: 11.85 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.17 ms
+[Sort] elapsed: 5.07 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.43 ms
+mem_allocated: [32935772160]	dram_small_allocation_bytes: [874700800]	pages_allocated: [15705]	missing_faults_handled: [15705]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[779608/1280514] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 12.43 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.13 ms
+[Sort] elapsed: 4.73 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.69 ms
+===
+NVM bw: 0.012546, NVM bw EWMA: 0.012060, NVM bw stddev: 0.000607, cusum: 0.001143
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012690, NVM bw EWMA: 0.012123, NVM bw stddev: 0.000599, cusum: 0.001410
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012387, NVM bw EWMA: 0.012150, NVM bw stddev: 0.000546, cusum: 0.001375
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012795, NVM bw EWMA: 0.012214, NVM bw stddev: 0.000553, cusum: 0.001679
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.011597, NVM bw EWMA: 0.012153, NVM bw stddev: 0.000554, cusum: 0.000846
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.012913, NVM bw EWMA: 0.012229, NVM bw stddev: 0.000582, cusum: 0.001239
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+========================================
+Starting new interval
+========================================
+NVM bw: 0.015713, NVM bw EWMA: 0.012577, NVM bw stddev: 0.001496, cusum: 0.003627
+Estimated latency diff: 0.15 us
+min_score: 0.000 (0.000 0.000), max_score: 34.324 (70.667 10.095)
+Prom cost: 636.000000, Dem cost: 636.000000
+Migrated 0 pages (0 bytes) in this interval
+
+===============================[Tree] elapsed: 12.84 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.50 ms
+[Sort] elapsed: 4.92 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 19.64 ms
+mem_allocated: [33575403520]	dram_small_allocation_bytes: [874700800]	pages_allocated: [16010]	missing_faults_handled: [16010]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[795423/1296661] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 10.30 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.54 ms
+[Sort] elapsed: 6.41 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 18.67 ms
+[Tree] elapsed: 0.76 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.58 ms
+[Sort] elapsed: 7.95 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 10.75 ms
+mem_allocated: [34363932672]	dram_small_allocation_bytes: [874700800]	pages_allocated: [16386]	missing_faults_handled: [16386]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[814940/1316611] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 1.80 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.56 ms
+[Sort] elapsed: 7.60 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 11.46 ms
+[Tree] elapsed: 2.83 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.59 ms
+[Sort] elapsed: 8.00 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 12.75 ms
+mem_allocated: [35160850432]	dram_small_allocation_bytes: [874700800]	pages_allocated: [16766]	missing_faults_handled: [16766]	bytes_migrated: [0]	migrations_up: [0]	migrations_down: [0]	migration_waits: [0]
+samples:[834619/1337026] throttle/unthrottle_cnt:[27/27] cools:[0]
+mig_eff (migration effectiveness guardrail): violations:[0]
+hotness_score (hotness score guardrail): violations:[0]
+[Tree] elapsed: 3.71 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.66 ms
+[Sort] elapsed: 8.28 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 14.08 ms
+[Tree] elapsed: 4.83 ms
+[Scores (window)] elapsed: 0.00 ms
+[Score] elapsed: 1.57 ms
+[Sort] elapsed: 8.37 ms
+[Identify] elapsed: 0.00 ms
+[Loop] elapsed: 15.27 ms
