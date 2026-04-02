@@ -96,10 +96,11 @@ def plot_1_8_comparison(results):
 
 
 def plot_by_workload(results, workload, workload_label):
-    # xsbench and gapbs_bc only have 1:8 data
+    # xsbench and gapbs_bc have all ratios data, but we only want 1:8
     if workload in ("xsbench", "gapbs_bc_twitter"):
         candidate_ratios = ["1-8"]
     else:
+    # other workloads only have 1:8 data
         candidate_ratios = RATIOS
 
     ratios = []
@@ -152,7 +153,7 @@ def plot_by_workload(results, workload, workload_label):
     else:
         ax.set_xticks([])
     ax.legend()
-    fig.suptitle(f'{workload_label} — ARMS Migration Effectiveness Violations (1:8 Ratio)',
+    fig.suptitle(f'{workload_label}\nARMS Migration Effectiveness Violations (1:8 Ratio)',
                  fontsize=13, fontweight='bold')
     plt.tight_layout()
     plt.savefig(os.path.join(RESULTS_DIR, f'violations_{workload}.png'), dpi=150)
