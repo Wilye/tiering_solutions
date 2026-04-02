@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import os, re, sys
+import os
+import re
+import sys
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -8,11 +10,11 @@ import numpy as np
 RESULTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 WORKLOADS = [
-    ("xsbench",            "XSBench"),
-    ("gapbs_bc_twitter",   "GapBS-BC (Twitter)"),
-    ("silo_tpcc",          "Silo-TPCC"),
-    ("liblinear_kddb",     "Liblinear-kddb"),
-    ("gapbs_pr_twitter",   "GapBS-PR (Twitter)"),
+    ("xsbench",          "XSBench"),
+    ("gapbs_bc_twitter", "GapBS-BC (Twitter)"),
+    ("silo_tpcc",        "Silo-TPCC"),
+    ("liblinear_kddb",   "Liblinear-kddb"),
+    ("gapbs_pr_twitter", "GapBS-PR (Twitter)"),
 ]
 
 RATIOS = ["2-1", "1-1", "1-2", "1-4", "1-8", "1-16"]
@@ -23,6 +25,7 @@ EDGE_COLOR = "#82B366"
 HATCH = "/"
 MARKER = "o"
 
+
 def extract_violations(filepath):
     mig_eff = None
     with open(filepath, 'r') as f:
@@ -32,6 +35,7 @@ def extract_violations(filepath):
                 mig_eff = int(m.group(1))
     # finds the last match to the regex
     return mig_eff
+
 
 def collect_results():
     results = {}
@@ -51,13 +55,19 @@ def collect_results():
                     results[(workload, ratio, cba)] = vals
     return results
 
+
 def plot_1_8_comparison(results):
-    labels, vals_list = [], []
+    labels = []
+    vals_list = []
+
     for workload, wl_label in WORKLOADS:
         for cba in CBA_MODES:
             key = (workload, "1-8", cba)
             if key in results:
-                cba_label = "CBA On" if cba == "cba_on" else "CBA Off"
+                if cba == "cba_on":
+                    cba_label = "CBA On"
+                else:
+                    cba_label = "CBA Off"
                 labels.append(f"{wl_label}\n{cba_label}")
                 vals_list.append(results[key])
 
@@ -67,29 +77,36 @@ def plot_1_8_comparison(results):
     x = np.arange(len(labels))
     fig, ax = plt.subplots(figsize=(max(10, len(labels) * 1.5), 5))
 
-    for i, vals in enumerate(vals_list):
+    for i in range(len(labels)):
+        vals = vals_list[i]
         ax.bar(x[i], np.mean(vals), 0.35,
-               color=COLOR, edgecolor=EDGE_COLOR, hatch=HATCH, linewidth=1.2)
-        ax.scatter([i] * len(vals), vals, color=EDGE_COLOR,
-                   marker=MARKER, zorder=5, s=20, alpha=0.7)
+               color=COLOR, edgecolor=EDGE_COLOR,
+               hatch=HATCH, linewidth=1.2)
+        ax.scatter([i] * len(vals), vals,
+                   color=EDGE_COLOR, marker=MARKER,
+                   zorder=5, s=20, alpha=0.7)
 
     ax.set_ylabel('Violation Count')
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=7)
-    fig.suptitle('ARMS Migration Effectiveness Violations (1:8 Ratio)', fontsize=13, fontweight='bold')
+    fig.suptitle('ARMS Migration Effectiveness Violations (1:8 Ratio)',
+                 fontsize=13, fontweight='bold')
     plt.tight_layout()
     plt.savefig(os.path.join(RESULTS_DIR, 'violations_plot.png'), dpi=150)
 
+
 def plot_by_workload(results, workload, workload_label):
-    # xsbench and gapbs_bc want only 1:8 data, other workloads only have 1:8 data
+    # xsbench and gapbs_bc only have 1:8 data
     if workload in ("xsbench", "gapbs_bc_twitter"):
         candidate_ratios = ["1-8"]
     else:
         candidate_ratios = RATIOS
 
-    ratios = [r for r in candidate_ratios
-              if (workload, r, 'cba_on') in results
-              or (workload, r, 'cba_off') in results]
+    ratios = []
+    for r in candidate_ratios:
+        if (workload, r, 'cba_on') in results or (workload, r, 'cba_off') in results:
+            ratios.append(r)
+
     if not ratios:
         return
 
@@ -97,28 +114,40 @@ def plot_by_workload(results, workload, workload_label):
     width = 0.35
     fig, ax = plt.subplots(figsize=(max(7, len(ratios) * 2), 5))
 
-    for j, (cba, label) in enumerate([('cba_on', 'CBA On'), ('cba_off', 'CBA Off')]):
-        means, all_vals = [], []
+    cba_configs = [('cba_on', 'CBA On'), ('cba_off', 'CBA Off')]
+    for j in range(len(cba_configs)):
+        cba, label = cba_configs[j]
+        means = []
+        all_vals = []
         for ratio in ratios:
             key = (workload, ratio, cba)
-            vals = results.get(key, [])
-            means.append(np.mean(vals) if vals else 0)
-            all_vals.append(vals)
+            if key in results:
+                vals = results[key]
+                means.append(np.mean(vals))
+                all_vals.append(vals)
+            else:
+                means.append(0)
+                all_vals.append([])
 
         offset = -width/2 + j * width
         ax.bar(x + offset, means, width,
                color=COLOR, edgecolor=EDGE_COLOR,
                hatch=HATCH, linewidth=1.2, label=label, alpha=0.8)
 
-        for i, vals in enumerate(all_vals):
+        for i in range(len(all_vals)):
+            vals = all_vals[i]
             if vals:
                 ax.scatter([x[i] + offset] * len(vals), vals,
-                         color=EDGE_COLOR, marker=MARKER, zorder=5, s=15, alpha=0.6)
+                           color=EDGE_COLOR, marker=MARKER,
+                           zorder=5, s=15, alpha=0.6)
 
     ax.set_ylabel('Violation Count')
     if len(ratios) > 1:
+        ratio_labels = []
+        for r in ratios:
+            ratio_labels.append(r.replace('-', ':'))
         ax.set_xticks(x)
-        ax.set_xticklabels([r.replace('-', ':') for r in ratios])
+        ax.set_xticklabels(ratio_labels)
         ax.set_xlabel('DRAM:NVM Ratio')
     else:
         ax.set_xticks([])
@@ -127,6 +156,7 @@ def plot_by_workload(results, workload, workload_label):
                  fontsize=13, fontweight='bold')
     plt.tight_layout()
     plt.savefig(os.path.join(RESULTS_DIR, f'violations_{workload}.png'), dpi=150)
+
 
 def print_summary(results):
     print("\n=== Summary ===")
@@ -139,8 +169,11 @@ def print_summary(results):
                 if key not in results:
                     continue
                 vals = results[key]
+                mean = np.mean(vals)
+                std = np.std(vals)
                 print(f"{wl_label:<20} {ratio:<8} {cba:<8} "
-                      f"{np.mean(vals):.1f} +/- {np.std(vals):.1f} (n={len(vals)})")
+                      f"{mean:.1f} +/- {std:.1f} (n={len(vals)})")
+
 
 if __name__ == '__main__':
     results = collect_results()
