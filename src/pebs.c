@@ -788,7 +788,7 @@ static inline int continue_migration(struct arms_page *hp, struct arms_page *cp)
   if (hot_page_min_avg < cold_page_max_avg) {
     LOG_INFO("Stopping migration of 0x%lx (score: %.3f (%.3f %.3f)) and 0x%lx (score: %.3f (%.3f %.3f)) cause of min/max\n",
               hp->va, hp->score, hp->w[0], hp->w[1],
-              cp->va, cp->score, cp->w[0], cp->w[1]);
+              cp->va, cp->score, cp->w[0], ƒcp->w[1]);
     return 0;
   }
 
