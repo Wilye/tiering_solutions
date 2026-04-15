@@ -12,7 +12,7 @@ SILO_DRAMSIZE=9299992576    # 8.66 GiB
 SILO_NVMSIZE=83019956224    # 77.32 GiB (69.32 + 8 extra)
 
 # GapBS PageRank g25 config (1:8)
-PR_BIN="/mnt/data/gapbs_copy/gapbs/pr"
+PR_BIN="/users/shelby/workloads/gapbs/pr"
 PR_ARGS="-n 16 -g 25"
 PR_DRAMSIZE=1415577600      # 1.32 GiB
 PR_NVMSIZE=11370758144      # 10.59 GiB
@@ -31,9 +31,9 @@ run_workload() {
     echo "=== Running ${name} ${cba_label} run ${run_num} ==="
     echo "  Output: ${outfile}"
 
-    timeout ${TIMEOUT} sudo env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
+    { time timeout ${TIMEOUT} sudo numactl -N0 env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
         LD_PRELOAD=${SRC_DIR}/libarms.so \
-        ${bin} ${args} > "${outfile}" 2>&1
+        ${bin} ${args} ; } > "${outfile}" 2>&1
 
     local exit_code=$?
     if [ ${exit_code} -eq 124 ]; then
@@ -55,11 +55,11 @@ for i in $(seq 1 ${NUM_RUNS}); do
         "OMP_NUM_THREADS=16"
 done
 
-for i in $(seq 1 ${NUM_RUNS}); do
-    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
-        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
-        "OMP_NUM_THREADS=16"
-done
+#for i in $(seq 1 ${NUM_RUNS}); do
+#    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
+#        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
+#        "OMP_NUM_THREADS=16"
+#done
 
 # --- CBA OFF ---
 echo "Building with CBA OFF..."
@@ -73,11 +73,11 @@ for i in $(seq 1 ${NUM_RUNS}); do
         "OMP_NUM_THREADS=16"
 done
 
-for i in $(seq 1 ${NUM_RUNS}); do
-    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
-        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
-        "OMP_NUM_THREADS=16"
-done
+#for i in $(seq 1 ${NUM_RUNS}); do
+#    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
+#        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
+#        "OMP_NUM_THREADS=16"
+#done
 
 # --- Rebuild default ---
 echo "Rebuilding default (CBA ON)..."

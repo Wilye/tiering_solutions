@@ -5,11 +5,11 @@ SRC_DIR="/users/shelby/tiering_solutions/src"
 NUM_RUNS=3
 TIMEOUT=1800  # 30 minutes
 
-XSBENCH_BIN="/users/shelby/XSBench/openmp-threading/XSBench"
+XSBENCH_BIN="/users/shelby/workloads/XSBench/openmp-threading/XSBench" 
 XSBENCH_ARGS="-g 130000 -p 20000000 -t 12"
 
-GAPBS_BIN="/mnt/data/gapbs_copy/gapbs/bc"
-GAPBS_ARGS="-n 16 -f /mnt/data/gapbs/benchmark/graphs/twitter.sg"
+GAPBS_BIN="/users/shelby/workloads/gapbs/bc"
+GAPBS_ARGS="-n 16 -f /users/shelby/workloads/gapbs/benchmark/graphs/twitter.sg"
 GAPBS_NVMSIZE=68719476736  # 64 GiB
 
 # GiB to bytes (rounded down to 2 MiB page alignment)
@@ -36,9 +36,9 @@ run_workload() {
     echo "=== Running ${name} ${cba_label} run ${run_num} ==="
     echo "  Output: ${outfile}"
 
-    timeout ${TIMEOUT} sudo env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
+    { time timeout ${TIMEOUT} sudo numactl -N0 env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
         LD_PRELOAD=${SRC_DIR}/libarms.so \
-        ${bin} ${args} > "${outfile}" 2>&1
+        ${bin} ${args} ; } > "${outfile}" 2>&1
 
     local exit_code=$?
     if [ ${exit_code} -eq 124 ]; then
@@ -49,7 +49,7 @@ run_workload() {
 }
 
 # XSBench ratios
-XSBENCH_RATIOS="2-1 1-1 1-2 1-4 1-8 1-16"
+XSBENCH_RATIOS="1-8" #  full ratios: "2-1 1-1 1-2 1-4 1-8 1-16"
 declare -A XSBENCH_DRAM XSBENCH_NVM
 XSBENCH_DRAM[2-1]=43.31;  XSBENCH_NVM[2-1]=21.66
 XSBENCH_DRAM[1-1]=32.49;  XSBENCH_NVM[1-1]=32.49
@@ -59,7 +59,7 @@ XSBENCH_DRAM[1-8]=7.22;   XSBENCH_NVM[1-8]=57.75
 XSBENCH_DRAM[1-16]=3.82;  XSBENCH_NVM[1-16]=61.15
 
 # GapBS BC twitter ratios
-GAPBS_RATIOS="2-1 1-1 1-2 1-4 1-8 1-16"
+GAPBS_RATIOS="1-8"
 declare -A GAPBS_DRAM
 GAPBS_DRAM[2-1]=8.72
 GAPBS_DRAM[1-1]=6.54

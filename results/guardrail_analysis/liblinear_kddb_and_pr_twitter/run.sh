@@ -6,14 +6,14 @@ NUM_RUNS=3
 TIMEOUT=1800  # 30 minutes
 
 # Liblinear kddb config (1:8)
-LIBLINEAR_BIN="/mnt/data/workloads_sujay/liblinear-2.47/train"
-LIBLINEAR_ARGS="-s 6 -m 16 /mnt/data/liblinear/datasets/kddb"
+LIBLINEAR_BIN="/users/shelby/workloads/liblinear-2.47/train"
+LIBLINEAR_ARGS="-s 6 -m 16 /users/shelby/workloads/liblinear-2.47/kddb"
 LIBLINEAR_DRAMSIZE=2499805184   # 2.33 GiB
 LIBLINEAR_NVMSIZE=20034093056   # 18.66 GiB
 
 # GapBS PageRank twitter config (1:8)
-PR_BIN="/mnt/data/gapbs_copy/gapbs/pr"
-PR_ARGS="-n 16 -f /mnt/data/gapbs_copy/gapbs/benchmark/graphs/twitter.sg"
+PR_BIN="/users/shelby/workloads/gapbs/pr"
+PR_ARGS="-n 16 -f /users/shelby/workloads/gapbs/benchmark/graphs/twitter.sg"
 PR_DRAMSIZE=1470103552      # 1.37 GiB
 PR_NVMSIZE=68719476736      # 64 GiB
 
@@ -31,9 +31,9 @@ run_workload() {
     echo "=== Running ${name} ${cba_label} run ${run_num} ==="
     echo "  Output: ${outfile}"
 
-    timeout ${TIMEOUT} sudo env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
+    { time timeout ${TIMEOUT} sudo numactl -N0 env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
         LD_PRELOAD=${SRC_DIR}/libarms.so \
-        ${bin} ${args} > "${outfile}" 2>&1
+        ${bin} ${args} ; } > "${outfile}" 2>&1
 
     local exit_code=$?
     if [ ${exit_code} -eq 124 ]; then
@@ -49,10 +49,10 @@ cd ${SRC_DIR}
 make clean && make
 echo ""
 
-#for i in $(seq 1 ${NUM_RUNS}); do
-#    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-#        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_on" ${i}
-#done
+for i in $(seq 1 ${NUM_RUNS}); do
+    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
+        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_on" ${i}
+done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
@@ -66,10 +66,10 @@ cd ${SRC_DIR}
 make no-cba
 echo ""
 
-#for i in $(seq 1 ${NUM_RUNS}); do
-#    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-#        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_off" ${i}
-#done
+for i in $(seq 1 ${NUM_RUNS}); do
+    run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
+        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_off" ${i}
+done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
