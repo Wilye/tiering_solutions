@@ -1,0 +1,1 @@
+Did not run with the time binary. ran with numactl -N0 though
