@@ -7,7 +7,7 @@ TIMEOUT=1800  # 30 minutes
 
 # Liblinear kddb config (1:8)
 LIBLINEAR_BIN="/users/shelby/workloads/liblinear-2.47/train"
-LIBLINEAR_ARGS="-s 6 -m 16 /users/shelby/workloads/liblinear-2.47/kddb"
+LIBLINEAR_ARGS="-s 6 -m 20 /users/shelby/workloads/liblinear-2.47/kddb"
 LIBLINEAR_DRAMSIZE=2499805184   # 2.33 GiB
 LIBLINEAR_NVMSIZE=20034093056   # 18.66 GiB
 
@@ -57,7 +57,7 @@ done
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
         ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
-        "OMP_NUM_THREADS=16 MIN_INTERPOSE_MEM_SIZE=134217728"
+        "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
 done
 
 # --- CBA OFF ---
@@ -74,7 +74,7 @@ done
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
         ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
-        "OMP_NUM_THREADS=16 MIN_INTERPOSE_MEM_SIZE=134217728"
+        "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
 done
 
 # --- Rebuild default ---

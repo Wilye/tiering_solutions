@@ -72,5 +72,8 @@ no-cba: clean
 no-guardrails-no-cba: clean
 	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_MIG_EFF_GUARDRAIL -DDISABLE_HOTNESS_SCORE_GUARDRAIL -DDISABLE_COST_BENEFIT"
 
+no-hcd: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_HOT_SET_CHANGE_DETECTOR"
+
 clean:
 	$(RM) *.o *.so policies/*.o

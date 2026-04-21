@@ -1013,6 +1013,7 @@ void *pebs_policy_thread()
       float drift = HCD_PH_DRIFT * nvm_bw_std;
       float threshold = HCD_PH_THRESHOLD * nvm_bw_std;
 
+#ifndef DISABLE_HOT_SET_CHANGE_DETECTOR
       // Page-Hinkley test
       cusum += ((cur_nvm_bw - nvm_bw_ewma) - drift);
       cusum = fmaxf(cusum, 0.0f); // We are only interested in positive deviations
@@ -1031,6 +1032,7 @@ void *pebs_policy_thread()
           time_since_recn = 0;
         }
       }
+#endif
 
       batch_size = ((NVM_WR_BW_KNEE - cur_nvm_bw) / NVM_WR_BW_KNEE) * NUM_MIGRATION_THREADS;
       batch_size = floor(batch_size);
@@ -1365,6 +1367,7 @@ loop_end:
       }
     }
 
+#ifndef DISABLE_HOT_SET_CHANGE_DETECTOR
     // Update sampling frequency if there a hot-set change detected
     if (bias == recn_bias && sampling_mode != HIGH_FIDELITY) {
       update_sampling_frequency();
@@ -1375,6 +1378,7 @@ loop_end:
       sampling_mode = DEFAULT_SAMPLING;
       LOG_REPORT("Switching to DEFAULT sampling mode\n");
     }
+#endif
 
     migrate_time_us = loop_timer.elapsed_us;
     if (migrate_time_us < (1.0 * policy_thread_period)) {

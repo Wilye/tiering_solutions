@@ -7,7 +7,7 @@ TIMEOUT=1800  # 30 minutes
 
 # Silo TPC-C config (1:8, c220g5)
 SILO_BIN="/users/shelby/tiering_solutions/apps/silo/silo/out-perf.masstree/benchmarks/dbtest"
-SILO_ARGS="--verbose --bench tpcc --num-threads 16 --scale-factor 100 --ops-per-worker 8000000 --numa-memory 85743345664"
+SILO_ARGS="--verbose --bench tpcc --num-threads 20 --scale-factor 100 --ops-per-worker 8000000 --numa-memory 85743345664"
 SILO_DRAMSIZE=9299992576    # 8.66 GiB
 SILO_NVMSIZE=83019956224    # 77.32 GiB (69.32 + 8 extra)
 
@@ -52,13 +52,13 @@ echo ""
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "silo_tpcc_1-8" "${SILO_BIN}" "${SILO_ARGS}" \
         ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "cba_on" ${i} \
-        "OMP_NUM_THREADS=16"
+        "OMP_NUM_THREADS=20"
 done
 
 #for i in $(seq 1 ${NUM_RUNS}); do
 #    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
 #        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
-#        "OMP_NUM_THREADS=16"
+#        "OMP_NUM_THREADS=20"
 #done
 
 # --- CBA OFF ---
@@ -70,13 +70,13 @@ echo ""
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "silo_tpcc_1-8" "${SILO_BIN}" "${SILO_ARGS}" \
         ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "cba_off" ${i} \
-        "OMP_NUM_THREADS=16"
+        "OMP_NUM_THREADS=20"
 done
 
 #for i in $(seq 1 ${NUM_RUNS}); do
 #    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
 #        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
-#        "OMP_NUM_THREADS=16"
+#        "OMP_NUM_THREADS=20"
 #done
 
 # --- Rebuild default ---

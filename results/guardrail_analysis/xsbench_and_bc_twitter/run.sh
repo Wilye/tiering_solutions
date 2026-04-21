@@ -6,7 +6,7 @@ NUM_RUNS=3
 TIMEOUT=1800  # 30 minutes
 
 XSBENCH_BIN="/users/shelby/workloads/XSBench/openmp-threading/XSBench" 
-XSBENCH_ARGS="-g 130000 -p 20000000 -t 12"
+XSBENCH_ARGS="-g 130000 -p 20000000 -t 20"
 
 GAPBS_BIN="/users/shelby/workloads/gapbs/bc"
 GAPBS_ARGS="-n 16 -f /users/shelby/workloads/gapbs/benchmark/graphs/twitter.sg"
@@ -88,7 +88,7 @@ for ratio in ${GAPBS_RATIOS}; do
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
             ${dram} ${GAPBS_NVMSIZE} "cba_on" ${i} \
-            "OMP_NUM_THREADS=12 MIN_INTERPOSE_MEM_SIZE=134217728"
+            "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
     done
 done
 
@@ -112,7 +112,7 @@ for ratio in ${GAPBS_RATIOS}; do
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
             ${dram} ${GAPBS_NVMSIZE} "cba_off" ${i} \
-            "OMP_NUM_THREADS=12 MIN_INTERPOSE_MEM_SIZE=134217728"
+            "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
     done
 done
 

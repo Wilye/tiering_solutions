@@ -1,0 +1,1 @@
+note: ran with 20 threads, and 700 MHz uncore frequency, and time binary to track time for liblinear. 
