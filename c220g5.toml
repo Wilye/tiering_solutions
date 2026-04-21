@@ -1,0 +1,370 @@
+
+# General settings
+timeout_multiplier = 3
+mem_size_alignment_bytes = 2097152 # 2MiB
+nvm_size_extra_gib = 8 # Extra NVM size to avoid HeMem crashing
+
+[optimizer]
+num_iters = 100
+n_random_init = 20
+n_random_probability = 0.2
+warmup_iters = 3
+
+[engine]
+
+[engine.hmsdk]
+source_path = '/users/SujayYS/hmsdk'
+run_command_template = 'sudo cgexec -g memory:hmsdk numactl -N0 -- taskset -c 0-9,20-25 sudo ${env} ${workload_run_command} > ${workload_output_filepath} 2>&1'
+dram_extra_gib = 0.700 # account for watermak in NUMA systems (713 MiB for c220g5 observed when using memchew)
+metrics_interval_secs = 15
+
+[engine.hemem]
+source_path = '/usr/local/hemem/src'
+run_command_template = 'numactl -N0 -m0 -- taskset -c 0-9,20-25 sudo ${env} ${workload_run_command} > ${workload_output_filepath} 2>&1'
+
+
+[workload]
+num_threads = 16
+source_path = "/mnt/ssd/workloads"
+dataset_path = "/mnt/ssd/inputs"
+
+logging_output_filepath = "/tmp/logging_output.log"
+
+# Currently valid template placeholders for workload run commands are:
+# - ${source_path}
+# - ${dataset_path}
+# - ${num_thread}
+
+
+##############################
+### Betweenness Centrality ###
+##############################
+
+## GapBS: Betweenness Centrality (kron-s29)
+# RSS: 78.13 GiB
+# NOTE: 1/2 of default trials to reduce opt iter time
+[workload.bc]
+run_command_template = '${source_path}/gapbs/bc -n 8 -f ${dataset_path}/gapbs/kron_s29.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}' }
+target_metric = "elapsed_time"
+
+    [workload.bc.mem_ratio]
+    1-8 = { dram_size_gib = 8.68, nvm_size_gib = 69.45 }
+
+## GapBS: Betweenness Centrality (kron-s27)
+# RSS: 19.46 GiB
+[workload.bc-s27]
+run_command_template = '${source_path}/gapbs/bc -n 16 -f ${dataset_path}/gapbs/kron_s27.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.bc-s27.mem_ratio]
+    1-8 = { dram_size_gib = 2.16, nvm_size_gib = 17.30 }
+
+## GapBS: Betweenness Centrality (twitter)
+# RSS: 13.08 GiB
+[workload.bc-twitter]
+run_command_template = '${source_path}/gapbs/bc -n 16 -f ${dataset_path}/gapbs/twitter.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.bc-twitter.mem_ratio]
+    2-1 = { dram_size_gib = 8.72, nvm_size_gib = 4.36 }
+    1-1 = { dram_size_gib = 6.54, nvm_size_gib = 6.54 }
+    1-2 = { dram_size_gib = 4.36, nvm_size_gib = 8.72 }
+    1-4 = { dram_size_gib = 2.62, nvm_size_gib = 10.46 }
+    1-8 = { dram_size_gib = 1.45, nvm_size_gib = 11.63 }
+    1-16 = { dram_size_gib = 0.77, nvm_size_gib = 12.31 }
+
+## GapBS: Betweenness Centrality (web)
+# RSS: 16.31 GiB
+[workload.bc-web]
+run_command_template = '${source_path}/gapbs/bc -n 16 -f ${dataset_path}/gapbs/web.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.bc-web.mem_ratio]
+    1-8 = { dram_size_gib = 1.81, nvm_size_gib = 14.50 }
+
+
+#################################
+### Connected Components (SV) ###
+#################################
+
+## GapBS: Connected Components (SV) [kron-s29]
+# RSS: 69.29 GiB
+# NOTE: 1/2 of default trials to reduce opt iter time
+[workload.cc_sv]
+run_command_template = '${source_path}/gapbs/cc_sv -n 8 -f ${dataset_path}/gapbs/kron_s29.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}' }
+target_metric = "elapsed_time"
+
+    [workload.cc_sv.mem_ratio]
+    1-8 = { dram_size_gib = 7.70, nvm_size_gib = 61.59 }
+
+## GapBS: Connected Components (SV) [kron-s27]
+# RSS: 17.24 GiB
+[workload.cc_sv-s27]
+run_command_template = '${source_path}/gapbs/cc_sv -n 16 -f ${dataset_path}/gapbs/kron_s27.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.cc_sv-s27.mem_ratio]
+    1-8 = { dram_size_gib = 1.92, nvm_size_gib = 15.32 }
+
+## GapBS: Connected Components (SV) [twitter]
+# RSS: 12.09 GiB
+[workload.cc_sv-twitter]
+run_command_template = '${source_path}/gapbs/cc_sv -n 16 -f ${dataset_path}/gapbs/twitter.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.cc_sv-twitter.mem_ratio]
+    1-8 = { dram_size_gib = 1.34, nvm_size_gib = 10.75 }
+
+## GapBS: Connected Components (SV) [web]
+# RSS: 15.33 GiB
+[workload.cc_sv-web]
+run_command_template = '${source_path}/gapbs/cc_sv -n 16 -f ${dataset_path}/gapbs/web.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.cc_sv-web.mem_ratio]
+    1-8 = { dram_size_gib = 1.70, nvm_size_gib = 13.62 }
+
+
+################
+### PageRank ###
+################
+
+## GapBS: PageRank (kron-s29)
+# RSS: 71.29 GiB
+# NOTE: 1/2 of default trials to reduce opt iter time
+[workload.pagerank]
+run_command_template = '${source_path}/gapbs/pr -n 8 -f ${dataset_path}/gapbs/kron_s29.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}' }
+target_metric = "elapsed_time"
+
+    [workload.pagerank.mem_ratio]
+    1-8 = { dram_size_gib = 7.92, nvm_size_gib = 63.36 }
+
+## GapBS: PageRank (kron-s27)
+# RSS: 17.74 GiB
+[workload.pagerank-s27]
+run_command_template = '${source_path}/gapbs/pr -n 16 -f ${dataset_path}/gapbs/kron_s27.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.pagerank-s27.mem_ratio]
+    1-8 = { dram_size_gib = 1.97, nvm_size_gib = 15.77 }
+
+## GapBS: PageRank (twitter)
+# RSS: 12.32 GiB
+[workload.pagerank-twitter]
+run_command_template = '${source_path}/gapbs/pr -n 16 -f ${dataset_path}/gapbs/twitter.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.pagerank-twitter.mem_ratio]
+    1-8 = { dram_size_gib = 1.37, nvm_size_gib = 10.95 }
+
+## GapBS: PageRank (web)
+# RSS: 15.52 GiB
+[workload.pagerank-web]
+run_command_template = '${source_path}/gapbs/pr -n 16 -f ${dataset_path}/gapbs/web.sg'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.pagerank-web.mem_ratio]
+    1-8 = { dram_size_gib = 1.72, nvm_size_gib = 13.79 }
+
+
+################
+### Graph500 ###
+################
+
+## Graph500
+# RSS: ~68.47 GiB
+[workload.graph500]
+run_command_template = '${source_path}/graph500/omp-csr/omp-csr -s 27 -V'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', SKIP_VALIDATION = 1 }
+target_metric = "elapsed_time"
+
+    [workload.graph500.mem_ratio]
+    1-8 = { dram_size_gib = 7.60, nvm_size_gib = 60.87 }
+
+
+## Graph500
+# RSS: ~34.13 GiB
+[workload.graph500-josepm]
+run_command_template = '${source_path}/graph500/omp-csr/omp-csr -s 26 -V'
+env_vars = { OMP_NUM_THREADS = '${num_threads}', SKIP_VALIDATION = 1, MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.graph500-josepm.mem_ratio]
+    1-8 = { dram_size_gib = 3.79, nvm_size_gib = 30.33 }
+
+
+
+############
+### GUPS ###
+############
+
+## GUPS: Hotset-Move
+## RSS: 64 GiB
+# NOTE: 64 GiB total / 8GiB hot
+[workload.gups]
+run_command_template = '${source_path}/gups/gups-hotset-move ${num_threads} 1000000000 36 8 33'
+target_metric = "elapsed_time"
+
+    [workload.gups.mem_ratio]
+    2-1 = { dram_size_gib = 42.66, nvm_size_gib = 21.3 }
+    1-1 = { dram_size_gib = 32, nvm_size_gib = 32 }
+    1-2 = { dram_size_gib = 21.3, nvm_size_gib = 42.66 }
+    1-4 = { dram_size_gib = 12.8, nvm_size_gib = 51.2 }
+    1-8 = { dram_size_gib = 7.1, nvm_size_gib = 64 }
+    1-16 = { dram_size_gib = 3.74, nvm_size_gib = 60.24 }
+
+
+#################
+### Liblinear ###
+#################
+
+## Liblinear (kdd12)
+# RSS: 69.03 GiB
+[workload.liblinear]
+run_command_template ='${source_path}/liblinear/train -s 6 -m ${num_threads} ${dataset_path}/liblinear/kdd12'
+target_metric = "elapsed_time"
+
+    [workload.liblinear.mem_ratio]
+    2-1 = { dram_size_gib = 46.02, nvm_size_gib = 23.01 }
+    1-1 = { dram_size_gib = 34.52, nvm_size_gib = 34.52 }
+    1-2 = { dram_size_gib = 23.01, nvm_size_gib = 46.02 }
+    1-4 = { dram_size_gib = 13.81, nvm_size_gib =  55.22 }
+    1-8 = { dram_size_gib = 7.67, nvm_size_gib = 61.36 }
+    1-16 = { dram_size_gib = 4.06, nvm_size_gib = 64.97 }
+
+## Liblinear [kdda]
+# RSS: 11.38 GiB
+[workload.liblinear-kdda]
+run_command_template ='${source_path}/liblinear/train -s 6 -m ${num_threads} ${dataset_path}/liblinear/kdda'
+env_vars = { MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.liblinear-kdda.mem_ratio]
+    1-8 = { dram_size_gib = 1.26, nvm_size_gib = 10.12 }
+
+## Liblinear [kddb]
+# RSS: 20.99 GiB
+[workload.liblinear-kddb]
+run_command_template ='${source_path}/liblinear/train -s 6 -m ${num_threads} ${dataset_path}/liblinear/kddb'
+env_vars = { MIN_INTERPOSE_MEM_SIZE = 134217728 }
+target_metric = "elapsed_time"
+
+    [workload.liblinear-kddb.mem_ratio]
+    2-1 = { dram_size_gib = 14.00, nvm_size_gib = 7.00 }
+    1-1 = { dram_size_gib = 10.50, nvm_size_gib = 10.50 }
+    1-2 = { dram_size_gib = 7.00, nvm_size_gib = 14.00 }
+    1-4 = { dram_size_gib = 4.20, nvm_size_gib = 16.80 }
+    1-8 = { dram_size_gib = 2.33, nvm_size_gib = 18.66 }
+    1-16 = { dram_size_gib = 1.23, nvm_size_gib = 19.76 }
+
+
+############
+### SILO ###
+############
+
+# numa-memory should be set to the RSS of the workload
+# This is why Silo will allocate this much size as huge pages, that can be handled by HeMem
+# -- Note that if set *more* than RSS, there many not be enough DRAM pages for HeMem (i.e., pebs.c !"Out of Memory")
+# -- Note that if set *less* than RSS, Silo will aborted (i.e., region ending at <address> OOM)
+
+## Silo-TPCC
+## RSS: 75.68 GiB
+# Total 120M operations (i.e., 10M / thread)
+[workload.silo-tpcc-scailp]
+run_command_template = '${source_path}/silo/out-perf.masstree/benchmarks/dbtest --verbose --bench tpcc --num-threads ${num_threads} --scale-factor 100 --ops-per-worker 10000000 --numa-memory ${RSS}'
+target_metric = "elapsed_time"
+
+    [workload.silo-tpcc-scailp.mem_ratio]
+    1-8 = { dram_size_gib = 8.41, nvm_size_gib = 67.27 }
+
+## Silo-TPCC
+## RSS: 79.85 GiB
+# Total 128M operations (i.e., 8M / thread)
+[workload.silo-tpcc-c220g5]
+run_command_template = '${source_path}/silo/out-perf.masstree/benchmarks/dbtest --verbose --bench tpcc --num-threads ${num_threads} --scale-factor 100 --ops-per-worker 8000000 --numa-memory ${RSS}'
+target_metric = "elapsed_time"
+
+    [workload.silo-tpcc-c220g5.mem_ratio]
+    2-1 = { dram_size_gib = 53.23, nvm_size_gib = 26.62 }
+    1-1 = { dram_size_gib = 39.925, nvm_size_gib = 39.925 }
+    1-2 = { dram_size_gib = 26.62, nvm_size_gib = 53.23 }
+    1-4 = { dram_size_gib = 15.97, nvm_size_gib = 63.88 }
+    1-8 = { dram_size_gib = 8.66, nvm_size_gib = 69.32 }
+    1-16 = { dram_size_gib = 4.70, nvm_size_gib = 75.15 }
+
+
+## Silo-YCSB
+# RSS: 62.84 GiB
+# Total 1.5B operations (i.e., 150M / thread)
+[workload.silo-ycsb]
+run_command_template = '${source_path}/silo/out-perf.masstree/benchmarks/dbtest --verbose --bench ycsb --num-threads ${num_threads} --scale-factor 400000 --ops-per-worker 150000000 --numa-memory ${RSS}'
+target_metric = "elapsed_time"
+
+    [workload.silo-ycsb.mem_ratio]
+    2-1 = { dram_size_gib = 41.89, nvm_size_gib = 20.95 }
+    1-1 = { dram_size_gib = 31.42, nvm_size_gib = 31.42 }
+    1-2 = { dram_size_gib = 20.95, nvm_size_gib = 41.89 }
+    1-4 = { dram_size_gib = 12.57, nvm_size_gib = 50.27 }
+    1-8 = { dram_size_gib = 6.98, nvm_size_gib = 55.86 }
+    1-16 = { dram_size_gib = 3.70, nvm_size_gib = 59.14 }
+
+
+###############
+### XSBench ###
+###############
+
+## XSBench
+# RSS: 64.97 GiB
+[workload.xsbench]
+run_command_template ='${source_path}/xsbench/XSBench -g 130000 -p 20000000 -t ${num_threads}'
+target_metric = "elapsed_time"
+
+    [workload.xsbench.mem_ratio]
+    2-1 = { dram_size_gib = 43.31, nvm_size_gib = 21.66 }
+    1-1 = { dram_size_gib = 32.49, nvm_size_gib = 32.49 }
+    1-2 = { dram_size_gib = 21.66, nvm_size_gib = 43.31 }
+    1-4 = { dram_size_gib = 12.99, nvm_size_gib = 51.98 }
+    1-8 = { dram_size_gib = 7.22, nvm_size_gib = 57.75 }
+    1-16 = { dram_size_gib = 3.82, nvm_size_gib = 61.15 }
+
+
+## XSBench (xl)
+# RSS: 116.56 GiB
+[workload.xsbench-xl]
+run_command_template ='${source_path}/xsbench/XSBench -s xl -p 25000000 -t ${num_threads}'
+target_metric = "elapsed_time"
+
+    [workload.xsbench-xl.mem_ratio]
+    1-4 = { dram_size_gib = 23.31, nvm_size_gib =  93.25 }
+    1-8 = { dram_size_gib = 12.95, nvm_size_gib = 103.61 }
+
+#############
+### Btree ###
+#############
+
+## Btree
+# RSS:  42.95 GiB
+[workload.btree]
+run_command_template ='${source_path}/btree/bin/bench_btree_mt -- 600000000 750000000'
+env_vars = { OMP_NUM_THREADS = '${num_threads}' }
+target_metric = "elapsed_time"
+
+    [workload.btree.mem_ratio]
+    2-1 = { dram_size_gib = 28.63, nvm_size_gib = 14.32 }
+    1-1 = { dram_size_gib = 21.48, nvm_size_gib = 21.48 }
+    1-2 = { dram_size_gib = 14.32, nvm_size_gib = 28.63 }
+    1-4 = { dram_size_gib = 8.59, nvm_size_gib = 34.36 }
+    1-8 = { dram_size_gib = 4.77, nvm_size_gib = 38.18 }
+    1-16 = { dram_size_gib = 2.52, nvm_size_gib = 40.43 }
