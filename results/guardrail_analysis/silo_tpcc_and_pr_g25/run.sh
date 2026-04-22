@@ -2,7 +2,7 @@
 
 RESULTS_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="/users/shelby/tiering_solutions/src"
-NUM_RUNS=3
+NUM_RUNS=1
 TIMEOUT=1800  # 30 minutes
 
 # Silo TPC-C config (1:8, c220g5)
@@ -43,44 +43,32 @@ run_workload() {
     fi
 }
 
-# --- CBA ON ---
-echo "Building with CBA ON (default)..."
+# --- Default (normal sort) ---
+echo "Building default (normal sort)..."
 cd ${SRC_DIR}
 make clean && make
 echo ""
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "silo_tpcc_1-8" "${SILO_BIN}" "${SILO_ARGS}" \
-        ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "cba_on" ${i} \
+        ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "normal" ${i} \
         "OMP_NUM_THREADS=20"
 done
 
-#for i in $(seq 1 ${NUM_RUNS}); do
-#    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
-#        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
-#        "OMP_NUM_THREADS=20"
-#done
-
-# --- CBA OFF ---
-echo "Building with CBA OFF..."
+# --- Inverted sort ---
+echo "Building with inverted sort..."
 cd ${SRC_DIR}
-make no-cba
+make invert-sort
 echo ""
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "silo_tpcc_1-8" "${SILO_BIN}" "${SILO_ARGS}" \
-        ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "cba_off" ${i} \
+        ${SILO_DRAMSIZE} ${SILO_NVMSIZE} "invert_sort" ${i} \
         "OMP_NUM_THREADS=20"
 done
 
-#for i in $(seq 1 ${NUM_RUNS}); do
-#    run_workload "gapbs_pr_g25_1-8" "${PR_BIN}" "${PR_ARGS}" \
-#        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
-#        "OMP_NUM_THREADS=20"
-#done
-
 # --- Rebuild default ---
-echo "Rebuilding default (CBA ON)..."
+echo "Rebuilding default..."
 cd ${SRC_DIR}
 make clean && make
 

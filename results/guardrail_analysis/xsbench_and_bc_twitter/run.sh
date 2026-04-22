@@ -2,7 +2,7 @@
 
 RESULTS_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="/users/shelby/tiering_solutions/src"
-NUM_RUNS=3
+NUM_RUNS=1
 TIMEOUT=1800  # 30 minutes
 
 XSBENCH_BIN="/users/shelby/workloads/XSBench/openmp-threading/XSBench" 
@@ -68,8 +68,8 @@ GAPBS_DRAM[1-4]=2.62
 GAPBS_DRAM[1-8]=1.45
 GAPBS_DRAM[1-16]=0.77
 
-# --- CBA ON ---
-echo "Building with CBA ON (default)..."
+# --- Default (normal sort) ---
+echo "Building default (normal sort)..."
 cd ${SRC_DIR}
 make clean && make
 echo ""
@@ -79,7 +79,7 @@ for ratio in ${XSBENCH_RATIOS}; do
     nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-            ${dram} ${nvm} "cba_on" ${i}
+            ${dram} ${nvm} "normal" ${i}
     done
 done
 
@@ -87,15 +87,15 @@ for ratio in ${GAPBS_RATIOS}; do
     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-            ${dram} ${GAPBS_NVMSIZE} "cba_on" ${i} \
+            ${dram} ${GAPBS_NVMSIZE} "normal" ${i} \
             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
     done
 done
 
-# --- CBA OFF ---
-echo "Building with CBA OFF..."
+# --- Inverted sort ---
+echo "Building with inverted sort..."
 cd ${SRC_DIR}
-make no-cba
+make invert-sort
 echo ""
 
 for ratio in ${XSBENCH_RATIOS}; do
@@ -103,7 +103,7 @@ for ratio in ${XSBENCH_RATIOS}; do
     nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-            ${dram} ${nvm} "cba_off" ${i}
+            ${dram} ${nvm} "invert_sort" ${i}
     done
 done
 
@@ -111,13 +111,13 @@ for ratio in ${GAPBS_RATIOS}; do
     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
     for i in $(seq 1 ${NUM_RUNS}); do
         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-            ${dram} ${GAPBS_NVMSIZE} "cba_off" ${i} \
+            ${dram} ${GAPBS_NVMSIZE} "invert_sort" ${i} \
             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
     done
 done
 
 # --- Rebuild default ---
-echo "Rebuilding default (CBA ON)..."
+echo "Rebuilding default..."
 cd ${SRC_DIR}
 make clean && make
 

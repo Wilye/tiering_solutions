@@ -75,5 +75,8 @@ no-guardrails-no-cba: clean
 no-hcd: clean
 	$(MAKE) CFLAGS="$(CFLAGS) -DDISABLE_HOT_SET_CHANGE_DETECTOR"
 
+invert-sort: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DINVERT_SORT"
+
 clean:
 	$(RM) *.o *.so policies/*.o

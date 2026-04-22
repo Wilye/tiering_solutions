@@ -1,0 +1,3 @@
+uncore throttled to 0x707, 20 threads, MBA set to 100 and 10
+only 1 run each
+1:8 ratio

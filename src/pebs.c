@@ -492,7 +492,11 @@ int sort_entry_cmp(const void *a, const void *b) {
   struct score_entry _a = *(const struct score_entry*)a;
   struct score_entry _b = *(const struct score_entry*)b;
 
+#ifdef INVERT_SORT
+  return (_a.score < _b.score) ? -1 : (_a.score > _b.score);
+#else
   return (_a.score > _b.score) ? -1 : (_a.score < _b.score);
+#endif
 }
 
 static void reset_page_access_fields(struct arms_page *page)

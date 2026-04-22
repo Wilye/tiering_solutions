@@ -2,7 +2,7 @@
 
 RESULTS_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="/users/shelby/tiering_solutions/src"
-NUM_RUNS=3
+NUM_RUNS=1
 TIMEOUT=1800  # 30 minutes
 
 # Liblinear kddb config (1:8)
@@ -43,42 +43,42 @@ run_workload() {
     fi
 }
 
-# --- CBA ON ---
-echo "Building with CBA ON (default)..."
+# --- Default (normal sort) ---
+echo "Building default (normal sort)..."
 cd ${SRC_DIR}
 make clean && make
 echo ""
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_on" ${i}
+        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "normal" ${i}
 done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
-        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_on" ${i} \
+        ${PR_DRAMSIZE} ${PR_NVMSIZE} "normal" ${i} \
         "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
 done
 
-# --- CBA OFF ---
-echo "Building with CBA OFF..."
+# --- Inverted sort ---
+echo "Building with inverted sort..."
 cd ${SRC_DIR}
-make no-cba
+make invert-sort
 echo ""
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "liblinear_kddb_1-8" "${LIBLINEAR_BIN}" "${LIBLINEAR_ARGS}" \
-        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "cba_off" ${i}
+        ${LIBLINEAR_DRAMSIZE} ${LIBLINEAR_NVMSIZE} "invert_sort" ${i}
 done
 
 for i in $(seq 1 ${NUM_RUNS}); do
     run_workload "gapbs_pr_twitter_1-8" "${PR_BIN}" "${PR_ARGS}" \
-        ${PR_DRAMSIZE} ${PR_NVMSIZE} "cba_off" ${i} \
+        ${PR_DRAMSIZE} ${PR_NVMSIZE} "invert_sort" ${i} \
         "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
 done
 
 # --- Rebuild default ---
-echo "Rebuilding default (CBA ON)..."
+echo "Rebuilding default..."
 cd ${SRC_DIR}
 make clean && make
 
