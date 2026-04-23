@@ -1,0 +1,9 @@
+run with scoring inversion
+
+findings:
+- no migrations happening with inverted sort because CBA is filtering them out. it sees that the "hottest" page in the
+scores array is way colder than the "coldest" page in the scores array, so it doesn't choose to migrate anything.
+- the initial placement of pages happen to be optimal enough that it doesn't affect anything for XSBench
+- there are no hotness score violations because the boundary calculated (dramsize / page_size) is shifted too far up
+in the scores array. at 1:8 ratio, DRAM holds 1/9th of pages. so boundary is ~3,600 of ~32,000 pages for XSBench.
+the 3,600 pages are cold. warm pages don't appear until later.

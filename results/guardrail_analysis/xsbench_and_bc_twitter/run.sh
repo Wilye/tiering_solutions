@@ -95,7 +95,7 @@ done
 # --- Inverted sort ---
 echo "Building with inverted sort..."
 cd ${SRC_DIR}
-make invert-sort
+make invert-sort-no-cba
 echo ""
 
 for ratio in ${XSBENCH_RATIOS}; do

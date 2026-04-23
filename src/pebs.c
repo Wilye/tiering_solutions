@@ -1140,6 +1140,7 @@ void *pebs_policy_thread()
     int boundary = dramsize / PAGE_SIZE;
     for (int k = 0; k < boundary && k < s_pages_cnt; k++) {
       struct arms_page* top_page = scores[k].page;
+#ifndef INVERT_SORT // when score is inverted, do not do multi round promotional filtering (page doesn't have to stay hot)
       if (scores[k].score != 0) {
         top_page->hot_age++;
         if (top_page->hot_age > 1 && (top_page->score >= top_page->prev_score)) {
@@ -1147,6 +1148,9 @@ void *pebs_policy_thread()
           top_page->can_promote = true;
         }
       }
+#else
+      top_page->can_promote = true;
+#endif
     }
     for (int k = boundary; k < s_pages_cnt; k++) {
       struct arms_page *p = scores[k].page;
@@ -1233,9 +1237,10 @@ void *pebs_policy_thread()
         LOG_REPORT("Scheduled %lu migrations\n", num_migration_jobs);
         break;
       }
-
+#ifndef INVERT_SORT
       if (scores[promote_idx].score == 0)
         break;
+#endif
       // find the hotest NVM page that needs to be promoted
       ptimer_continue(&id_timer);
       while (promote_idx < demote_idx && scores[promote_idx].page->in_dram) {

@@ -63,7 +63,7 @@ done
 # --- Inverted sort ---
 echo "Building with inverted sort..."
 cd ${SRC_DIR}
-make invert-sort
+make invert-sort-no-cba
 echo ""
 
 for i in $(seq 1 ${NUM_RUNS}); do

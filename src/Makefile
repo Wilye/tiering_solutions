@@ -78,5 +78,8 @@ no-hcd: clean
 invert-sort: clean
 	$(MAKE) CFLAGS="$(CFLAGS) -DINVERT_SORT"
 
+invert-sort-no-cba: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DINVERT_SORT -DDISABLE_COST_BENEFIT"
+
 clean:
 	$(RM) *.o *.so policies/*.o
