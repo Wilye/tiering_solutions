@@ -55,7 +55,7 @@ XSBENCH_DRAM[2-1]=43.31;  XSBENCH_NVM[2-1]=21.66
 XSBENCH_DRAM[1-1]=32.49;  XSBENCH_NVM[1-1]=32.49
 XSBENCH_DRAM[1-2]=21.66;  XSBENCH_NVM[1-2]=43.31
 XSBENCH_DRAM[1-4]=12.99;  XSBENCH_NVM[1-4]=51.98
-XSBENCH_DRAM[1-8]=7.22;   XSBENCH_NVM[1-8]=57.75
+XSBENCH_DRAM[1-8]=7.22;   XSBENCH_NVM[1-8]=62.00
 XSBENCH_DRAM[1-16]=3.82;  XSBENCH_NVM[1-16]=61.15
 
 # GapBS BC twitter ratios
@@ -83,38 +83,38 @@ for ratio in ${XSBENCH_RATIOS}; do
     done
 done
 
-for ratio in ${GAPBS_RATIOS}; do
-    dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
-    for i in $(seq 1 ${NUM_RUNS}); do
-        run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-            ${dram} ${GAPBS_NVMSIZE} "normal" ${i} \
-            "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
-    done
-done
+# for ratio in ${GAPBS_RATIOS}; do
+#     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
+#     for i in $(seq 1 ${NUM_RUNS}); do
+#         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
+#             ${dram} ${GAPBS_NVMSIZE} "normal" ${i} \
+#             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
+#     done
+# done
 
-# --- Inverted sort ---
-echo "Building with inverted sort..."
-cd ${SRC_DIR}
-make invert-sort-no-cba
-echo ""
+# # --- Inverted sort ---
+# echo "Building with inverted sort..."
+# cd ${SRC_DIR}
+# make invert-sort-no-cba
+# echo ""
 
-for ratio in ${XSBENCH_RATIOS}; do
-    dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
-    nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
-    for i in $(seq 1 ${NUM_RUNS}); do
-        run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-            ${dram} ${nvm} "invert_sort" ${i}
-    done
-done
+# for ratio in ${XSBENCH_RATIOS}; do
+#     dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
+#     nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
+#     for i in $(seq 1 ${NUM_RUNS}); do
+#         run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
+#             ${dram} ${nvm} "invert_sort" ${i}
+#     done
+# done
 
-for ratio in ${GAPBS_RATIOS}; do
-    dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
-    for i in $(seq 1 ${NUM_RUNS}); do
-        run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-            ${dram} ${GAPBS_NVMSIZE} "invert_sort" ${i} \
-            "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
-    done
-done
+# for ratio in ${GAPBS_RATIOS}; do
+#     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
+#     for i in $(seq 1 ${NUM_RUNS}); do
+#         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
+#             ${dram} ${GAPBS_NVMSIZE} "invert_sort" ${i} \
+#             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
+#     done
+# done
 
 # --- Rebuild default ---
 echo "Rebuilding default..."

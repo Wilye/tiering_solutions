@@ -1,0 +1,3 @@
+Uncore throttled, MBA throttled, and 20 threads
+Ran with comparisons to smoothed DRAM EWMAs
+- xs bench normal run originally OOM'd so increased the script's NVM size to 62 GiBs from 57.75
