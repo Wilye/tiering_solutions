@@ -1283,9 +1283,10 @@ void *pebs_policy_thread()
         LOG_REPORT("DRAM_ACCESS_FRACTION: %.4f (ewma=%.4f, dram_accesses=%lu, nvm_accesses=%lu, total=%lu)\n",
                    dram_fraction, dram_access_fraction_ewma, total_dram_accesses, total_nvm_accesses, total_accesses);
 
-        if (prev_dram_access_fraction_ewma > 0 && dram_fraction < prev_dram_access_fraction_ewma) {
+        // Only fire during history mode and when fraction drops significantly below baseline
+        if (bias == hist_bias && prev_dram_access_fraction_ewma > 0 && dram_fraction < prev_dram_access_fraction_ewma * 0.90) {
           dram_access_fraction_violations++;
-          LOG_REPORT("DRAM_ACCESS_FRACTION VIOLATION #%lu: fraction (%.4f) < smoothed baseline (%.4f)\n",
+          LOG_REPORT("DRAM_ACCESS_FRACTION VIOLATION #%lu: fraction (%.4f) < 90%% of smoothed baseline (%.4f)\n",
                      dram_access_fraction_violations, dram_fraction, prev_dram_access_fraction_ewma);
         }
         prev_dram_access_fraction_ewma = dram_access_fraction_ewma;

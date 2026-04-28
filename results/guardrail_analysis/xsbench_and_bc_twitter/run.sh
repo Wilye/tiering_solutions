@@ -5,7 +5,7 @@ SRC_DIR="/users/shelby/tiering_solutions/src"
 NUM_RUNS=1
 TIMEOUT=1800  # 30 minutes
 
-XSBENCH_BIN="/users/shelby/workloads/XSBench/openmp-threading/XSBench" 
+XSBENCH_BIN="/users/shelby/workloads/XSBench/openmp-threading/XSBench"
 XSBENCH_ARGS="-g 130000 -p 20000000 -t 20"
 
 GAPBS_BIN="/users/shelby/workloads/gapbs/bc"
@@ -28,12 +28,12 @@ run_workload() {
     local args=$3
     local dramsize=$4
     local nvmsize=$5
-    local cba_label=$6
+    local label=$6
     local run_num=$7
     local extra_env=$8
 
-    local outfile="${RESULTS_DIR}/${name}_${cba_label}_run${run_num}.txt"
-    echo "=== Running ${name} ${cba_label} run ${run_num} ==="
+    local outfile="${RESULTS_DIR}/${name}_${label}_run${run_num}.txt"
+    echo "=== Running ${name} ${label} run ${run_num} ==="
     echo "  Output: ${outfile}"
 
     { time timeout ${TIMEOUT} sudo numactl -N0 env DRAMSIZE=${dramsize} NVMSIZE=${nvmsize} ${extra_env} \
@@ -49,7 +49,7 @@ run_workload() {
 }
 
 # XSBench ratios
-XSBENCH_RATIOS="1-8" #  full ratios: "2-1 1-1 1-2 1-4 1-8 1-16"
+XSBENCH_RATIOS="1-8"
 declare -A XSBENCH_DRAM XSBENCH_NVM
 XSBENCH_DRAM[2-1]=43.31;  XSBENCH_NVM[2-1]=21.66
 XSBENCH_DRAM[1-1]=32.49;  XSBENCH_NVM[1-1]=32.49
@@ -68,53 +68,72 @@ GAPBS_DRAM[1-4]=2.62
 GAPBS_DRAM[1-8]=1.45
 GAPBS_DRAM[1-16]=0.77
 
-# --- Default (normal sort) ---
-echo "Building default (normal sort)..."
-cd ${SRC_DIR}
-make clean && make
-echo ""
+# --- Ablation selection ---
+ABLATION=${1:-"cba"}  # default: cba
 
-for ratio in ${XSBENCH_RATIOS}; do
-    dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
-    nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
-    for i in $(seq 1 ${NUM_RUNS}); do
-        run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-            ${dram} ${nvm} "normal" ${i}
+usage() {
+    echo "Usage: $0 <ablation>"
+    echo "  cba          - CBA on vs CBA off"
+    echo "  invert_sort  - Normal vs inverted sort (no CBA)"
+    echo "  hcd          - HCD on vs HCD off"
+    echo "  sample_period - Normal vs high sample period"
+    exit 1
+}
+
+run_all_workloads() {
+    local label=$1
+    for ratio in ${XSBENCH_RATIOS}; do
+        dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
+        nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
+        for i in $(seq 1 ${NUM_RUNS}); do
+            run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
+                ${dram} ${nvm} "${label}" ${i}
+        done
     done
-done
 
-# for ratio in ${GAPBS_RATIOS}; do
-#     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
-#     for i in $(seq 1 ${NUM_RUNS}); do
-#         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-#             ${dram} ${GAPBS_NVMSIZE} "normal" ${i} \
-#             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
-#     done
-# done
+    for ratio in ${GAPBS_RATIOS}; do
+        dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
+        for i in $(seq 1 ${NUM_RUNS}); do
+            run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
+                ${dram} ${GAPBS_NVMSIZE} "${label}" ${i} \
+                "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
+        done
+    done
+}
 
-# # --- Inverted sort ---
-# echo "Building with inverted sort..."
-# cd ${SRC_DIR}
-# make invert-sort-no-cba
-# echo ""
-
-# for ratio in ${XSBENCH_RATIOS}; do
-#     dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
-#     nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
-#     for i in $(seq 1 ${NUM_RUNS}); do
-#         run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-#             ${dram} ${nvm} "invert_sort" ${i}
-#     done
-# done
-
-# for ratio in ${GAPBS_RATIOS}; do
-#     dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
-#     for i in $(seq 1 ${NUM_RUNS}); do
-#         run_workload "gapbs_bc_twitter_${ratio}" "${GAPBS_BIN}" "${GAPBS_ARGS}" \
-#             ${dram} ${GAPBS_NVMSIZE} "invert_sort" ${i} \
-#             "OMP_NUM_THREADS=20 MIN_INTERPOSE_MEM_SIZE=134217728"
-#     done
-# done
+case ${ABLATION} in
+    cba)
+        echo "=== Ablation: CBA on vs CBA off ==="
+        cd ${SRC_DIR} && make clean && make
+        run_all_workloads "cba_on"
+        cd ${SRC_DIR} && make no-cba
+        run_all_workloads "cba_off"
+        ;;
+    invert_sort)
+        echo "=== Ablation: Normal vs Inverted Sort (no CBA) ==="
+        cd ${SRC_DIR} && make clean && make
+        run_all_workloads "normal"
+        cd ${SRC_DIR} && make invert-sort-no-cba
+        run_all_workloads "invert_sort"
+        ;;
+    hcd)
+        echo "=== Ablation: HCD on vs HCD off ==="
+        cd ${SRC_DIR} && make clean && make
+        run_all_workloads "hcd_on"
+        cd ${SRC_DIR} && make no-hcd
+        run_all_workloads "hcd_off"
+        ;;
+    sample_period)
+        echo "=== Ablation: Normal vs High Sample Period ==="
+        cd ${SRC_DIR} && make clean && make
+        run_all_workloads "normal_sample"
+        cd ${SRC_DIR} && make high-sample-period
+        run_all_workloads "high_sample_period"
+        ;;
+    *)
+        usage
+        ;;
+esac
 
 # --- Rebuild default ---
 echo "Rebuilding default..."
