@@ -1,0 +1,25 @@
+Migration effectiveness guardrail cannot distinguish between small dips into steady state
+This is good representation of bad migrations though
+
+ran with bypassing multiround promotion filter (setting can_promote to true unconditionally when INVERT_SORT is defined)
+and the default settings (uncore throttled, MBA throttled, 20 threads)
+
+  ┌───────────┬────────────┬────────────────────────┬──────────┬────────────────┬────────────────┬─────────────┬─────────────┬─────────────┬─────────────┐                                 
+  │ Workload  │   Normal   │ Inverted Sort (no CBA) │ Perf Gap │ Migrations (N) │ Migrations (I) │ Mig Eff (N) │ Mig Eff (I) │ Hotness (N) │ Hotness (I) │                                 
+  ├───────────┼────────────┼────────────────────────┼──────────┼────────────────┼────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                                 
+  │ XSBench   │ 319.8s     │ 652.4s                 │ 104%     │ 6,717          │ 78,395         │ 31          │ 415         │ 0           │ 2           │                                 
+  ├───────────┼────────────┼────────────────────────┼──────────┼────────────────┼────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                                 
+  │ GapBS-BC  │ 7.42s      │ 12.41s                 │ 67%      │ 4,622          │ 54,685         │ 40          │ 121         │ 77          │ 0           │                                 
+  ├───────────┼────────────┼────────────────────────┼──────────┼────────────────┼────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                                 
+  │ GapBS-PR  │ 8.74s      │ 9.91s                  │ 13%      │ 1,607          │ 7,495          │ 38          │ 36          │ 0           │ 0           │                                 
+  ├───────────┼────────────┼────────────────────────┼──────────┼────────────────┼────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                                 
+  │ Silo TPCC │ 627K ops/s │ 516K ops/s             │ 21%      │ 57,419         │ 50,053         │ 216         │ 256         │ 0           │ 2           │                                 
+  ├───────────┼────────────┼────────────────────────┼──────────┼────────────────┼────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤                                 
+  │ Liblinear │ 8m5s       │ 8m20s                  │ 3%       │ 26,505         │ 12,031         │ 156         │ 57          │ 0           │ 29          │                                 
+  └───────────┴────────────┴────────────────────────┴──────────┴────────────────┴────────────────┴─────────────┴─────────────┴─────────────┴─────────────┘   
+
+  less migrations: after being migrated once, cold pages stay in DRAM, migration effectiveness guardrail isn't being tested
+  more migrations: cold pages are not constant
+  can select workoads where there's more churn (XSBench)
+  number of pages that stay cold can be less than dramsize
+  - can increase DRAM size

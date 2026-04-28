@@ -120,7 +120,7 @@ float min_score, max_score;
 
 #ifndef DISABLE_MIG_EFF_GUARDRAIL
 // Migration effectiveness guardrail state
-float prev_dram_bw = 0.0;
+float prev_dram_bw_ewma = 0.0;
 uint64_t mig_eff_migrations_since_bw_check = 0;
 uint64_t mig_eff_violations = 0;
 #endif
@@ -990,26 +990,28 @@ void *pebs_policy_thread()
       cur_dram_bw = ((float)(measure_bw(0)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
       cur_nvm_bw = ((float)(measure_bw(1)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
 
-#ifndef DISABLE_MIG_EFF_GUARDRAIL
-      // --- Migration Effectiveness Guardrail ---
-      if (prev_dram_bw > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
-        float dram_bw_delta = cur_dram_bw - prev_dram_bw;
-        if (dram_bw_delta <= 0) {
-          mig_eff_violations++;
-          LOG_REPORT("MIG_EFF VIOLATION #%lu: %lu migrations but DRAM BW did not increase (%.3f -> %.3f GB/s)\n",
-                     mig_eff_violations, mig_eff_migrations_since_bw_check,
-                     prev_dram_bw, cur_dram_bw);
-        }
-      }
-      prev_dram_bw = cur_dram_bw;
-      mig_eff_migrations_since_bw_check = 0;
-      // --- End Migration Effectiveness Guardrail ---
-#endif
-
       // update the BW
       dram_bw_ewma = (1 - HCD_EWMA_ALPHA) * dram_bw_ewma + HCD_EWMA_ALPHA * cur_dram_bw;
       nvm_bw_ewma = (1 - HCD_EWMA_ALPHA) * nvm_bw_ewma + HCD_EWMA_ALPHA * cur_nvm_bw;
       nvm_bw_std  = ((1 - HCD_STD_ALPHA) * nvm_bw_std * nvm_bw_std) + HCD_STD_ALPHA * (cur_nvm_bw - nvm_bw_ewma) * (cur_nvm_bw - nvm_bw_ewma);
+
+      #ifndef DISABLE_MIG_EFF_GUARDRAIL
+      // --- Migration Effectiveness Guardrail ---
+      // Only check during history mode - violations during recency mode are expected
+      // because DRAM BW naturally drops during hot-set transitions
+      if (bias == hist_bias && prev_dram_bw_ewma > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
+        float dram_bw_delta = cur_dram_bw - prev_dram_bw_ewma;
+        if (dram_bw_delta <= 0) {
+          mig_eff_violations++;
+          LOG_REPORT("MIG_EFF VIOLATION #%lu: %lu migrations but DRAM BW did not increase (%.3f (smoothed over 10s) -> %.3f GB/s)\n",
+                     mig_eff_violations, mig_eff_migrations_since_bw_check,
+                     prev_dram_bw_ewma, cur_dram_bw);
+        }
+      }
+      prev_dram_bw_ewma = dram_bw_ewma;
+      mig_eff_migrations_since_bw_check = 0;
+      // --- End Migration Effectiveness Guardrail ---
+    #endif
       nvm_bw_std = sqrtf(fmaxf(nvm_bw_std, 1e-12f)); // avoid stddev of 0
 
       // Scale drift and threshold based on stddev
