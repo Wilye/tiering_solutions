@@ -46,7 +46,7 @@ ring_handle_t ring_buf_init(uint64_t** buffer, size_t size)
 {
 	assert(buffer && size);
 
-	ring_handle_t rbuf = malloc(sizeof(ring_buf_t));
+	ring_handle_t rbuf = arms_malloc(sizeof(ring_buf_t));
 	assert(rbuf);
 
 	rbuf->buffer = buffer;

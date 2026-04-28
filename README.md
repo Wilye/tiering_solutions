@@ -42,9 +42,9 @@ echo 'CONFIG_NVDIMM_PFN=y' >> .config
 echo 'CONFIG_NVDIMM_DAX=y' >> .config
 echo 'CONFIG_FS_DAX=y' >> .config
 echo 'CONFIG_DAX=y' >> .config
-echo 'CONFIG_DEV_DAX=m' >> .config
-echo 'CONFIG_DEV_DAX_PMEM=m' >> .config
-echo 'CONFIG_DEV_DAX_KMEM=m' >> .config
+echo 'CONFIG_DEV_DAX=y' >> .config
+echo 'CONFIG_DEV_DAX_PMEM=y' >> .config
+echo 'CONFIG_DEV_DAX_KMEM=y' >> .config
 echo 'CONFIG_X86_MSR=y' >> .config
 ```
 
@@ -139,7 +139,7 @@ If you want to restrict the size of fast tier and slow tier, use `DRAMSIZE` and 
 sudo LD_PRELOAD=/path/to/arms/src/libarms.so DRAMSIZE=$((32*1024*1024*1024)) NVMSIZE=$((32*1024*1024*1024)) -- ./app
 ```
 
-Further, make sure your application is running on the correct NUMA node if you are using NVM to emulate CXL:
+Further, make sure your application is running on the correct NUMA node if you are using NUMA to emulate CXL:
 
 ```bash
 numactl -N0 sudo LD_PRELOAD=/path/to/arms/src/libarms.so DRAMSIZE=$((32*1024*1024*1024)) NVMSIZE=$((32*1024*1024*1024)) -- ./app

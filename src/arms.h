@@ -223,6 +223,19 @@ static inline enum pagetypes pagesize_to_pt(uint64_t pagesize)
   }
 }
 
+static inline void* arms_malloc(size_t z) {
+  internal_call = true;
+  void *p = malloc(z);
+  internal_call = false;
+  return p;
+}
+static inline void* arms_realloc(void *p, size_t z) {
+  internal_call = true;
+  void *r = realloc(p, z);
+  internal_call = false;
+  return r;
+}
+
 void arms_init();
 void arms_stop();
 void* arms_mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);

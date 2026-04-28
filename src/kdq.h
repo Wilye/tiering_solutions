@@ -22,7 +22,7 @@
 		kdq_##type##_t *q; \
 		q = (kdq_##type##_t*)calloc(1, sizeof(kdq_##type##_t)); \
 		q->bits = 2, q->mask = (1ULL<<q->bits) - 1; \
-		q->a = (type*)malloc((1<<q->bits) * sizeof(type)); \
+		q->a = (type*)arms_malloc((1<<q->bits) * sizeof(type)); \
 		return q; \
 	} \
 	SCOPE void kdq_destroy_##type(kdq_##type##_t *q) \

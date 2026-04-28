@@ -1,0 +1,528 @@
+--- a/include/uapi/linux/userfaultfd.h	2026-04-11 07:26:52.000000000 -0500
++++ b/include/uapi/linux/userfaultfd.h	2026-04-16 07:37:28.627670732 -0500
+@@ -383,4 +383,47 @@
+  */
+ #define UFFD_USER_MODE_ONLY 1
+ 
++/*
++ * ARMS custom extensions: CR3 read and DMA-accelerated page copy.
++ * Numbers 0x09–0x0c are free in this kernel (0x08 = POISON).
++ */
++#define _UFFDIO_CR3                (0x09)
++#define _UFFDIO_DMA_COPY           (0x0a)
++#define _UFFDIO_DMA_REQUEST_CHANNS (0x0b)
++#define _UFFDIO_DMA_RELEASE_CHANNS (0x0c)
++
++#define UFFDIO_CR3 \
++	_IOR(UFFDIO, _UFFDIO_CR3, struct uffdio_cr3)
++#define UFFDIO_DMA_COPY \
++	_IOWR(UFFDIO, _UFFDIO_DMA_COPY, struct uffdio_dma_copy)
++#define UFFDIO_DMA_REQUEST_CHANNS \
++	_IOWR(UFFDIO, _UFFDIO_DMA_REQUEST_CHANNS, struct uffdio_dma_channs)
++#define UFFDIO_DMA_RELEASE_CHANNS \
++	_IOWR(UFFDIO, _UFFDIO_DMA_RELEASE_CHANNS, struct uffdio_dma_channs)
++
++struct uffdio_cr3 {
++	__u64 cr3; /* physical address of page-table base (CR3) */
++};
++
++#define DMA_BATCH    32
++#define MAX_DMA_CHANS 16
++
++struct uffdio_dma_copy {
++	__u64 dst[DMA_BATCH];
++	__u64 src[DMA_BATCH];
++	__u64 len[DMA_BATCH];
++	__u64 count;
++	__u64 mode;
++	/*
++	 * "copy" is written by the ioctl and must be at the end: the
++	 * copy_from_user will not read the last 8 bytes.
++	 */
++	__s64 copy;
++};
++
++struct uffdio_dma_channs {
++	__u32 num_channs;
++	__u32 size_per_dma_request;
++};
++
+ #endif /* _LINUX_USERFAULTFD_H */
+--- a/include/linux/userfaultfd_k.h	2026-04-11 07:26:52.000000000 -0500
++++ b/include/linux/userfaultfd_k.h	2026-04-16 08:02:29.893443436 -0500
+@@ -128,6 +128,12 @@
+ 				   unsigned long len, uffd_flags_t flags);
+ extern int mwriteprotect_range(struct userfaultfd_ctx *ctx, unsigned long start,
+ 			       unsigned long len, bool enable_wp);
++
++/* ARMS custom DMA extensions */
++extern int dma_request_channs(struct uffdio_dma_channs *uffdio_dma_channs);
++extern int dma_release_channs(void);
++extern ssize_t dma_mcopy_pages(struct userfaultfd_ctx *ctx,
++			       struct uffdio_dma_copy *uffdio_dma_copy);
+ extern long uffd_wp_range(struct vm_area_struct *vma,
+ 			  unsigned long start, unsigned long len, bool enable_wp);
+ 
+@@ -234,13 +240,15 @@
+ 	 * uffd-wp, then shmem & hugetlbfs are not supported but only
+ 	 * anonymous.
+ 	 */
+-	if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma))
++	/* ARMS: DAX vmas are treated like anonymous for WP purposes */
++	if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma) &&
++	    !vma_is_dax(vma))
+ 		return false;
+ #endif
+ 
+-	/* By default, allow any of anon|shmem|hugetlb */
++	/* By default, allow any of anon|shmem|hugetlb|dax (ARMS extension) */
+ 	return vma_is_anonymous(vma) || is_vm_hugetlb_page(vma) ||
+-	    vma_is_shmem(vma);
++	    vma_is_shmem(vma) || vma_is_dax(vma);
+ }
+ 
+ static inline bool vma_has_uffd_without_event_remap(struct vm_area_struct *vma)
+--- a/fs/userfaultfd.c	2026-04-11 07:26:52.000000000 -0500
++++ b/fs/userfaultfd.c	2026-04-16 07:38:07.956421662 -0500
+@@ -2014,6 +2014,79 @@
+ 	goto out;
+ }
+ 
++/* ---- ARMS custom ioctl handlers ---- */
++
++static int userfaultfd_cr3(struct userfaultfd_ctx *ctx, unsigned long arg)
++{
++	struct uffdio_cr3 __user *user_uffdio_cr3 =
++		(struct uffdio_cr3 __user *)arg;
++	struct uffdio_cr3 uffdio_cr3;
++
++	if (copy_from_user(&uffdio_cr3, user_uffdio_cr3, sizeof(uffdio_cr3)))
++		return -EFAULT;
++
++	if (put_user(read_cr3_pa(), &user_uffdio_cr3->cr3))
++		return -EFAULT;
++
++	return 0;
++}
++
++static int userfaultfd_dma_copy(struct userfaultfd_ctx *ctx, unsigned long arg)
++{
++	__s64 ret;
++	struct uffdio_dma_copy uffdio_dma_copy;
++	struct uffdio_dma_copy __user *user_uffdio_dma_copy =
++		(struct uffdio_dma_copy __user *)arg;
++
++	ret = -EAGAIN;
++	if (atomic_read(&ctx->mmap_changing))
++		goto out;
++
++	ret = -EFAULT;
++	/* don't copy the output "copy" field at the end */
++	if (copy_from_user(&uffdio_dma_copy, user_uffdio_dma_copy,
++			   sizeof(uffdio_dma_copy) - sizeof(__s64)))
++		goto out;
++
++	ret = -EINVAL;
++	if (mmget_not_zero(ctx->mm)) {
++		ret = dma_mcopy_pages(ctx, &uffdio_dma_copy);
++		mmput(ctx->mm);
++	} else {
++		return -ESRCH;
++	}
++
++	if (unlikely(put_user(ret, &user_uffdio_dma_copy->copy)))
++		return -EFAULT;
++	if (ret < 0)
++		goto out;
++	ret = 0;
++out:
++	return ret;
++}
++
++static int userfaultfd_dma_request_channs(struct userfaultfd_ctx *ctx,
++					  unsigned long arg)
++{
++	struct uffdio_dma_channs uffdio_dma_channs;
++	struct uffdio_dma_channs __user *user_uffdio_dma_channs =
++		(struct uffdio_dma_channs __user *)arg;
++
++	if (copy_from_user(&uffdio_dma_channs, user_uffdio_dma_channs,
++			   sizeof(uffdio_dma_channs)))
++		return -EFAULT;
++
++	return dma_request_channs(&uffdio_dma_channs);
++}
++
++static int userfaultfd_dma_release_channs(struct userfaultfd_ctx *ctx,
++					  unsigned long arg)
++{
++	return dma_release_channs();
++}
++
++/* ---- end ARMS custom ioctl handlers ---- */
++
+ static long userfaultfd_ioctl(struct file *file, unsigned cmd,
+ 			      unsigned long arg)
+ {
+@@ -2054,6 +2127,18 @@
+ 	case UFFDIO_POISON:
+ 		ret = userfaultfd_poison(ctx, arg);
+ 		break;
++	case UFFDIO_CR3:
++		ret = userfaultfd_cr3(ctx, arg);
++		break;
++	case UFFDIO_DMA_COPY:
++		ret = userfaultfd_dma_copy(ctx, arg);
++		break;
++	case UFFDIO_DMA_REQUEST_CHANNS:
++		ret = userfaultfd_dma_request_channs(ctx, arg);
++		break;
++	case UFFDIO_DMA_RELEASE_CHANNS:
++		ret = userfaultfd_dma_release_channs(ctx, arg);
++		break;
+ 	}
+ 	return ret;
+ }
+--- a/mm/userfaultfd.c	2026-04-11 07:26:52.000000000 -0500
++++ b/mm/userfaultfd.c	2026-04-19 00:14:49.577083881 -0500
+@@ -17,6 +17,11 @@
+ #include <linux/shmem_fs.h>
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
++#include <linux/dmaengine.h>
++#include <linux/dma-mapping.h>
++#include <linux/mutex.h>
++#include <linux/wait.h>
++#include <asm/pgtable.h>
+ #include "internal.h"
+ #include "swap.h"
+ 
+@@ -2153,3 +2158,274 @@
+ 	mmap_write_unlock(mm);
+ 	mmput(mm);
+ }
++
++/* ---- ARMS DMA infrastructure ---- */
++
++static DECLARE_WAIT_QUEUE_HEAD(arms_dma_wq);
++#define ARMS_MAX_SIZE_PER_DMA_REQUEST (2 * 1024 * 1024)
++#define ARMS_MAX_DMA_CHANS 16
++static u32 arms_size_per_dma_request = ARMS_MAX_SIZE_PER_DMA_REQUEST;
++static struct dma_chan *arms_chans[ARMS_MAX_DMA_CHANS];
++static int arms_num_chans;
++
++struct arms_tx_dma_param {
++	atomic_t wakeup_count;
++	u64 expect_count;
++};
++
++/*
++ * DMA completion callbacks run in softirq/tasklet context — no sleeping.
++ * Use an atomic counter instead of a mutex to track completions.
++ */
++static void arms_dma_tx_callback(void *dma_async_param)
++{
++	struct arms_tx_dma_param *p = (struct arms_tx_dma_param *)dma_async_param;
++
++	if ((u64)atomic_inc_return(&p->wakeup_count) >= p->expect_count)
++		wake_up_interruptible(&arms_dma_wq);
++}
++
++/*
++ * bad_address - safely probe a kernel pointer.
++ * Returns non-zero if the address is not safely readable.
++ * In 5.1 this used probe_kernel_address(); in 6.18 use get_kernel_nofault().
++ */
++static int arms_bad_address(void *p)
++{
++	unsigned long dummy;
++
++	return get_kernel_nofault(dummy, (unsigned long *)p);
++}
++
++/*
++ * page_walk - translate a virtual address to its physical address by
++ * walking the current page tables directly via CR3.  Result is written
++ * to *phy_addr on success; on failure *phy_addr is left unchanged and
++ * a warning is printed.
++ */
++static void arms_page_walk(u64 address, u64 *phy_addr)
++{
++	pgd_t *base = __va(read_cr3_pa());
++	pgd_t *pgd = base + pgd_index(address);
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++	pte_t *pte;
++	u64 page_addr;
++	u64 page_offset;
++
++	if (arms_bad_address(pgd))
++		goto out;
++	if (!pgd_present(*pgd))
++		goto out;
++
++	p4d = p4d_offset(pgd, address);
++	if (arms_bad_address(p4d))
++		goto out;
++	if (!p4d_present(*p4d) || p4d_leaf(*p4d))
++		goto out;
++
++	pud = pud_offset(p4d, address);
++	if (arms_bad_address(pud))
++		goto out;
++	if (!pud_present(*pud) || pud_leaf(*pud))
++		goto out;
++
++	pmd = pmd_offset(pud, address);
++	if (arms_bad_address(pmd))
++		goto out;
++
++	if (pmd_leaf(*pmd)) {
++		page_addr   = pmd_val(*pmd) & 0x000FFFFFFFE00000ULL;
++		page_offset = address & ~HPAGE_MASK;
++		*phy_addr   = page_addr | page_offset;
++		return;
++	}
++
++	if (!pmd_present(*pmd))
++		goto out;
++
++	pte = pte_offset_kernel(pmd, address);
++	if (arms_bad_address(pte))
++		goto out;
++
++	page_addr   = pte_val(*pte) & 0x000FFFFFFFFFF000ULL;
++	page_offset = address & ~PAGE_MASK;
++	*phy_addr   = page_addr | page_offset;
++	return;
++
++out:
++	pr_warn("arms: arms_page_walk: bad address 0x%llx\n", address);
++}
++
++int dma_request_channs(struct uffdio_dma_channs *uffdio_dma_channs)
++{
++	dma_cap_mask_t mask;
++	int i, n;
++
++	if (!uffdio_dma_channs)
++		return -EINVAL;
++
++	/* Release any channels left over from a previous process that crashed
++	 * without calling UFFDIO_DMA_RELEASE_CHANNS. */
++	if (arms_num_chans > 0) {
++		pr_info("arms: releasing %d stale DMA channel(s) from previous run\n",
++			arms_num_chans);
++		dma_release_channs();
++	}
++
++	arms_size_per_dma_request = uffdio_dma_channs->size_per_dma_request;
++	if (arms_size_per_dma_request > ARMS_MAX_SIZE_PER_DMA_REQUEST)
++		arms_size_per_dma_request = ARMS_MAX_SIZE_PER_DMA_REQUEST;
++
++	n = min_t(u32, uffdio_dma_channs->num_channs, ARMS_MAX_DMA_CHANS);
++	if (n == 0)
++		n = 1;
++
++	dma_cap_zero(mask);
++	dma_cap_set(DMA_MEMCPY, mask);
++
++	for (i = 0; i < n; i++) {
++		arms_chans[i] = dma_request_channel(mask, NULL, NULL);
++		if (!arms_chans[i]) {
++			pr_err("arms: dma_request_channel failed for channel %d/%d\n",
++			       i + 1, n);
++			while (--i >= 0) {
++				dma_release_channel(arms_chans[i]);
++				arms_chans[i] = NULL;
++			}
++			arms_num_chans = 0;
++			return -ENODEV;
++		}
++		pr_info("arms: acquired DMA channel %d: %s\n", i,
++			dma_chan_name(arms_chans[i]));
++	}
++	arms_num_chans = n;
++	return 0;
++}
++
++int dma_release_channs(void)
++{
++	int i;
++
++	for (i = 0; i < arms_num_chans; i++) {
++		if (arms_chans[i]) {
++			dma_release_channel(arms_chans[i]);
++			arms_chans[i] = NULL;
++		}
++	}
++	arms_num_chans = 0;
++	arms_size_per_dma_request = ARMS_MAX_SIZE_PER_DMA_REQUEST;
++	return 0;
++}
++
++static ssize_t __dma_mcopy_pages(struct userfaultfd_ctx *ctx,
++				 struct uffdio_dma_copy *uffdio_dma_copy)
++{
++	struct mm_struct *dst_mm = ctx->mm;
++	ssize_t err;
++	long copied = 0;
++	u64 src_start, dst_start;
++	u64 src_cur, dst_cur, len_cur;
++	dma_addr_t src_phys, dst_phys;
++	u64 len, dma_len;
++	struct dma_chan *chan;
++	struct dma_async_tx_descriptor *tx;
++	dma_cookie_t dma_cookie;
++	u64 count, expect_count;
++	struct arms_tx_dma_param tx_param;
++	int index;
++
++	down_read(&dst_mm->mmap_lock);
++
++	err = -EAGAIN;
++	if (atomic_read(&ctx->mmap_changing))
++		goto out_unlock;
++
++	BUG_ON(!uffdio_dma_copy);
++	count = uffdio_dma_copy->count;
++
++	/* compute total number of DMA transactions needed */
++	expect_count = 0;
++	for (index = 0; index < count; index++) {
++		u64 l = uffdio_dma_copy->len[index];
++
++		expect_count += DIV_ROUND_UP(l, arms_size_per_dma_request);
++	}
++
++	atomic_set(&tx_param.wakeup_count, 0);
++	tx_param.expect_count = expect_count;
++
++	for (index = 0; index < count; index++) {
++		dst_start = uffdio_dma_copy->dst[index];
++		src_start = uffdio_dma_copy->src[index];
++		len       = uffdio_dma_copy->len[index];
++
++		BUG_ON(dst_start & ~PAGE_MASK);
++		BUG_ON(len & ~PAGE_MASK);
++		BUG_ON(src_start + len <= src_start);
++		BUG_ON(dst_start + len <= dst_start);
++
++		src_phys = 0;
++		dst_phys = 0;
++		arms_page_walk(src_start, &src_phys);
++		arms_page_walk(dst_start, &dst_phys);
++
++		for (src_cur = src_start, dst_cur = dst_start, len_cur = 0;
++		     len_cur < len;) {
++			err = 0;
++			chan = arms_chans[index % arms_num_chans];
++			dma_len = min_t(u64, len - len_cur,
++					arms_size_per_dma_request);
++
++			tx = dmaengine_prep_dma_memcpy(chan, dst_phys, src_phys,
++						       dma_len,
++						       DMA_PREP_INTERRUPT |
++						       DMA_CTRL_ACK);
++			if (!tx) {
++				pr_err("arms: dmaengine_prep_dma_memcpy failed\n");
++				err = -EIO;
++				goto out_unlock;
++			}
++
++			tx->callback       = arms_dma_tx_callback;
++			tx->callback_param = &tx_param;
++			dma_cookie = dmaengine_submit(tx);
++			if (dma_submit_error(dma_cookie)) {
++				pr_err("arms: DMA submit error\n");
++				err = -EIO;
++				goto out_unlock;
++			}
++
++			dma_async_issue_pending(chan);
++			len_cur  += dma_len;
++			src_cur  += dma_len;
++			dst_cur  += dma_len;
++			src_phys += dma_len;
++			dst_phys += dma_len;
++		}
++	}
++
++	wait_event_interruptible(arms_dma_wq,
++				 (u64)atomic_read(&tx_param.wakeup_count) >=
++				 tx_param.expect_count);
++
++	for (index = 0; index < count; index++)
++		copied += uffdio_dma_copy->len[index];
++
++out_unlock:
++	up_read(&dst_mm->mmap_lock);
++
++	BUG_ON(copied < 0);
++	BUG_ON(err > 0);
++	BUG_ON(!copied && !err);
++	return copied ? copied : err;
++}
++
++ssize_t dma_mcopy_pages(struct userfaultfd_ctx *ctx,
++			struct uffdio_dma_copy *uffdio_dma_copy)
++{
++	return __dma_mcopy_pages(ctx, uffdio_dma_copy);
++}
++
++/* ---- end ARMS DMA infrastructure ---- */
+--- a/mm/memory.c	2026-04-11 07:26:52.000000000 -0500
++++ b/mm/memory.c	2026-04-19 00:06:33.259842962 -0500
+@@ -6059,6 +6059,13 @@
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	if (vma_is_anonymous(vma))
+ 		return do_huge_pmd_anonymous_page(vmf);
++	/*
++	 * Deliver missing faults for devdax/shared VMAs to userfaultfd
++	 * before handing off to the driver.  The driver (e.g. dev_dax)
++	 * would otherwise map the page immediately, bypassing ARMS tracking.
++	 */
++	if (userfaultfd_missing(vma))
++		return handle_userfault(vmf, VM_UFFD_MISSING);
+ 	if (vma->vm_ops->huge_fault)
+ 		return vma->vm_ops->huge_fault(vmf, PMD_ORDER);
+ 	return VM_FAULT_FALLBACK;
+@@ -6082,6 +6089,19 @@
+ 	}
+ 
+ 	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
++		/*
++		 * Check userfaultfd WP before handing off to the driver.
++		 * For shared/devdax VMAs the anonymous branch above is
++		 * skipped, so we must check here; otherwise the DAX
++		 * huge_fault handler would silently remap the page as
++		 * writable and the userfaultfd WP event would never fire.
++		 */
++		if (likely(!unshare) &&
++		    userfaultfd_huge_pmd_wp(vma, vmf->orig_pmd)) {
++			if (userfaultfd_wp_async(vmf->vma))
++				goto split;
++			return handle_userfault(vmf, VM_UFFD_WP);
++		}
+ 		if (vma->vm_ops->huge_fault) {
+ 			ret = vma->vm_ops->huge_fault(vmf, PMD_ORDER);
+ 			if (!(ret & VM_FAULT_FALLBACK))
+--- a/mm/mprotect.c	2026-04-11 07:26:52.000000000 -0500
++++ b/mm/mprotect.c	2026-04-16 11:12:16.925141944 -0500
+@@ -458,7 +458,14 @@
+ 	 * (e.g. 2M shmem) because file thp is handled differently when
+ 	 * split by erasing the pmd so far.
+ 	 */
+-	return (cp_flags & MM_CP_UFFD_WP) && !vma_is_anonymous(vma);
++	/*
++	 * DAX (devdax) VMAs use huge PMDs directly; their PTE-level fault
++	 * handler returns VM_FAULT_SIGBUS for sub-huge-page accesses, so we
++	 * must not split the PMD.  change_huge_pmd() already handles setting
++	 * pmd_mkuffd_wp() on these entries.
++	 */
++	return (cp_flags & MM_CP_UFFD_WP) && !vma_is_anonymous(vma) &&
++	       !vma_is_dax(vma);
+ }
+ 
+ /*

@@ -230,6 +230,56 @@ static int setup_imc_bw_counters() {
 int bw_fds[NUM_TIERS][NUM_EVENTS][NUM_IMC];
 uint64_t prev_bw_val[NUM_TIERS][NUM_EVENTS][NUM_IMC] = {0};
 
+static uint64_t read_imc_event_config(const char *event_name) {
+  char path[128];
+  char buf[64];
+  int fd, n;
+  uint64_t event = 0, umask = 0;
+  char *p;
+
+  snprintf(path, sizeof(path), "/sys/devices/uncore_imc_0/events/%s", event_name);
+  fd = open(path, O_RDONLY);
+  if (fd == -1) {
+    LOG_ERROR("ERROR: Failed to open %s\n", path);
+    exit(1);
+  }
+  n = read(fd, buf, sizeof(buf) - 1);
+  close(fd);
+  if (n <= 0) {
+    LOG_ERROR("ERROR: Failed to read %s\n", path);
+    exit(1);
+  }
+  buf[n] = '\0';
+
+  p = strstr(buf, "event=");
+  if (p) event = strtoul(p + 6, NULL, 16);
+  p = strstr(buf, "umask=");
+  if (p) umask = strtoul(p + 6, NULL, 16);
+
+  return (umask << 8) | event;
+}
+
+static uint32_t read_imc_type(int imc_idx) {
+  char path[64];
+  char buf[16];
+  int fd, n;
+
+  snprintf(path, sizeof(path), "/sys/devices/uncore_imc_%d/type", imc_idx);
+  fd = open(path, O_RDONLY);
+  if (fd == -1) {
+    LOG_ERROR("ERROR: Failed to open %s\n", path);
+    exit(1);
+  }
+  n = read(fd, buf, sizeof(buf) - 1);
+  close(fd);
+  if (n <= 0) {
+    LOG_ERROR("ERROR: Failed to read %s\n", path);
+    exit(1);
+  }
+  buf[n] = '\0';
+  return (uint32_t)strtoul(buf, NULL, 10);
+}
+
 uint64_t measure_bw(int tier)
 {
   uint64_t cur_bw = 0;
@@ -257,13 +307,13 @@ void open_perf_events()
     for (unsigned long j = 0; j < NUM_EVENTS; j++) {
       for (unsigned long k = 0; k < NUM_IMC; k++) {
         memset(&pe, 0, sizeof(pe));
-        pe.type = i + 12; // TODO: read type from /sys/devices/uncore_imc_x/type
+        pe.type = read_imc_type(k);
         pe.size = sizeof(pe);
         pe.disabled = 1;
         pe.inherit = 1;
-        pe.config = (j == 0) ? 0x304:0xC04;
+        pe.config = read_imc_event_config((j == 0) ? "cas_count_read" : "cas_count_write");
 
-        fd = perf_event_open(&pe, -1, 10, -1, 0);
+        fd = perf_event_open(&pe, -1, (i == 0) ? 0 : 10, -1, 0); // CPU0 on node0, CPU10 on node1
         if (fd == -1) {
           LOG_ERROR("ERROR: Failed to open perf event for BW monitoring\n");
           exit(1);
@@ -1283,7 +1333,7 @@ void *pebs_policy_thread()
 
         LOG_DEBUG("Promoting freely at %lu: 0x%lx score: %f (%f %f)\n", promote_idx, p->va, p->score, p->w[0], p->w[1]);
 
-        m_req = malloc(sizeof(struct migration_req));
+        m_req = arms_malloc(sizeof(struct migration_req));
         memset(m_req, 0, sizeof(struct migration_req));
         m_req->nvm_page      = p;
         m_req->free_page     = np;
@@ -1333,7 +1383,7 @@ void *pebs_policy_thread()
       LOG_REPORT("Promoting at %ld: 0x%lx score: %f (%f %f)\n", promote_idx, p->va, p->score, p->w[0], p->w[1]);
 
       // move the cold DRAM page to NVM
-      m_req = malloc(sizeof(struct migration_req));
+      m_req = arms_malloc(sizeof(struct migration_req));
       memset(m_req, 0, sizeof(struct migration_req));
       m_req->dram_page     = cp;
       m_req->nvm_page      = p;
@@ -1578,17 +1628,17 @@ void pebs_init(void)
   pages_map = kh_init(kPagesMap);
   #endif
 
-  scores = (struct score_entry*)malloc((MAX_NVME_PAGES + MAX_DRAM_PAGES) * sizeof(struct score_entry));
+  scores = (struct score_entry*)arms_malloc((MAX_NVME_PAGES + MAX_DRAM_PAGES) * sizeof(struct score_entry));
 
   // Initialize the free/add ring buffers
   mod_page_dq = kdq_init(mod_page_t);
 
   // Initialize the neighbour ring buffers
 #ifdef SPATIAL_SMOOTHING
-  buffer = (uint64_t**)malloc(sizeof(uint64_t*) * (NUM_NEIGHBOURS + 2));
+  buffer = (uint64_t**)arms_malloc(sizeof(uint64_t*) * (NUM_NEIGHBOURS + 2));
   assert(buffer);
   l_neighbours = ring_buf_init(buffer, NUM_NEIGHBOURS + 2);
-  buffer = (uint64_t**)malloc(sizeof(uint64_t*) * (NUM_NEIGHBOURS + 2));
+  buffer = (uint64_t**)arms_malloc(sizeof(uint64_t*) * (NUM_NEIGHBOURS + 2));
   assert(buffer);
   r_neighbours = ring_buf_init(buffer, NUM_NEIGHBOURS + 2);
 #endif
