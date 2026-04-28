@@ -130,6 +130,13 @@ uint64_t mig_eff_violations = 0;
 uint64_t hotness_score_violations = 0;
 #endif
 
+#ifndef DISABLE_DRAM_ACCESS_FRACTION_GUARDRAIL
+// DRAM access fraction guardrail state
+float dram_access_fraction_ewma = 0.0;
+float prev_dram_access_fraction_ewma = 0.0;
+uint64_t dram_access_fraction_violations = 0;
+#endif
+
 //uint64_t global_clock = 0;
 
 uint64_t arms_pages_cnt = 0;
@@ -1216,7 +1223,8 @@ void *pebs_policy_thread()
     // against the hottest NVM pages (top of not-top-k)
     // If NVM-side pages have more accesses on average, the scoring is misranking
     {
-      int window = HOTNESS_SCORE_BOUNDARY_WINDOW;
+      int window = boundary / 10;  // 10% of DRAM capacity
+      if (window < 1) window = 1;
       int dram_start = boundary - window;  // coldest DRAM pages
       int nvm_end = boundary + window;     // hottest NVM pages
 
@@ -1250,6 +1258,40 @@ void *pebs_policy_thread()
       }
     }
     // --- End Hotness Score Guardrail ---
+#endif
+
+#ifndef DISABLE_DRAM_ACCESS_FRACTION_GUARDRAIL
+    // --- DRAM Access Fraction Guardrail ---
+    // Check whether pages physically in DRAM receive more accesses than pages in NVM
+    {
+      uint64_t total_dram_accesses = 0;
+      uint64_t total_nvm_accesses = 0;
+
+      for (int k = 0; k < s_pages_cnt; k++) {
+        if (scores[k].page->in_dram) {
+          total_dram_accesses += scores[k].raw_accesses;
+        } else {
+          total_nvm_accesses += scores[k].raw_accesses;
+        }
+      }
+
+      uint64_t total_accesses = total_dram_accesses + total_nvm_accesses;
+      if (total_accesses > 0) {
+        float dram_fraction = (float)total_dram_accesses / total_accesses;
+        dram_access_fraction_ewma = (1 - HCD_EWMA_ALPHA) * dram_access_fraction_ewma + HCD_EWMA_ALPHA * dram_fraction;
+
+        LOG_REPORT("DRAM_ACCESS_FRACTION: %.4f (ewma=%.4f, dram_accesses=%lu, nvm_accesses=%lu, total=%lu)\n",
+                   dram_fraction, dram_access_fraction_ewma, total_dram_accesses, total_nvm_accesses, total_accesses);
+
+        if (prev_dram_access_fraction_ewma > 0 && dram_fraction < prev_dram_access_fraction_ewma) {
+          dram_access_fraction_violations++;
+          LOG_REPORT("DRAM_ACCESS_FRACTION VIOLATION #%lu: fraction (%.4f) < smoothed baseline (%.4f)\n",
+                     dram_access_fraction_violations, dram_fraction, prev_dram_access_fraction_ewma);
+        }
+        prev_dram_access_fraction_ewma = dram_access_fraction_ewma;
+      }
+    }
+    // --- End DRAM Access Fraction Guardrail ---
 #endif
 
     if (s_pages_cnt == 0) {
@@ -1707,6 +1749,9 @@ void pebs_stats()
 #endif
 #ifndef DISABLE_HOTNESS_SCORE_GUARDRAIL
   LOG_STATS("hotness_score (hotness score guardrail): violations:[%lu]\n", hotness_score_violations);
+#endif
+#ifndef DISABLE_DRAM_ACCESS_FRACTION_GUARDRAIL
+  LOG_STATS("dram_access_fraction (dram access fraction guardrail): violations:[%lu]\n", dram_access_fraction_violations);
 #endif
   // arms_pages_cnt = total_pages_cnt =  throttle_cnt = unthrottle_cnt = 0;
 }
