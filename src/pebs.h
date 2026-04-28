@@ -150,8 +150,13 @@
 
 
 #define PERF_PAGES	(1 + (1 << 10))	// Has to be == 1+2^n, here 1MB
+#ifdef HIGH_SAMPLE_PERIOD
+#define DEFAULT_SAMPLE_PERIOD	(100003)
+#define HF_SAMPLE_PERIOD	(50003)
+#else
 #define DEFAULT_SAMPLE_PERIOD	(10007)
 #define HF_SAMPLE_PERIOD	(5003)
+#endif
 
 enum sampling_modes {
   DEFAULT_SAMPLING = 0,

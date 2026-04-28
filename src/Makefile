@@ -81,5 +81,8 @@ invert-sort: clean
 invert-sort-no-cba: clean
 	$(MAKE) CFLAGS="$(CFLAGS) -DINVERT_SORT -DDISABLE_COST_BENEFIT"
 
+high-sample-period: clean
+	$(MAKE) CFLAGS="$(CFLAGS) -DHIGH_SAMPLE_PERIOD"
+
 clean:
 	$(RM) *.o *.so policies/*.o
