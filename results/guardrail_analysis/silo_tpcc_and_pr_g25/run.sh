@@ -66,22 +66,22 @@ case ${ABLATION} in
         ;;
     invert_sort)
         echo "=== Ablation: Normal vs Inverted Sort (no CBA) ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "normal"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "normal"
         cd ${SRC_DIR} && make invert-sort-no-cba
         run_all_workloads "invert_sort"
         ;;
     hcd)
         echo "=== Ablation: HCD on vs HCD off ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "hcd_on"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "hcd_on"
         cd ${SRC_DIR} && make no-hcd
         run_all_workloads "hcd_off"
         ;;
     sample_period)
         echo "=== Ablation: Normal vs High Sample Period ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "normal_sample"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "normal_sample"
         cd ${SRC_DIR} && make high-sample-period
         run_all_workloads "high_sample_period"
         ;;

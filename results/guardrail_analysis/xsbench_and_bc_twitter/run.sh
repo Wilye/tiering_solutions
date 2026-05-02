@@ -59,7 +59,7 @@ XSBENCH_DRAM[1-8]=7.22;   XSBENCH_NVM[1-8]=62.00
 XSBENCH_DRAM[1-16]=3.82;  XSBENCH_NVM[1-16]=61.15
 
 # GapBS BC twitter ratios
-GAPBS_RATIOS="1-8"
+GAPBS_RATIOS="2-1 1-1 1-2 1-4 1-8 1-16"
 declare -A GAPBS_DRAM
 GAPBS_DRAM[2-1]=8.72
 GAPBS_DRAM[1-1]=6.54
@@ -82,14 +82,14 @@ usage() {
 
 run_all_workloads() {
     local label=$1
-    for ratio in ${XSBENCH_RATIOS}; do
-        dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
-        nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
-        for i in $(seq 1 ${NUM_RUNS}); do
-            run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
-                ${dram} ${nvm} "${label}" ${i}
-        done
-    done
+    # for ratio in ${XSBENCH_RATIOS}; do
+    #     dram=$(gib_to_bytes ${XSBENCH_DRAM[$ratio]})
+    #     nvm=$(gib_to_bytes ${XSBENCH_NVM[$ratio]})
+    #     for i in $(seq 1 ${NUM_RUNS}); do
+    #         run_workload "xsbench_${ratio}" "${XSBENCH_BIN}" "${XSBENCH_ARGS}" \
+    #             ${dram} ${nvm} "${label}" ${i}
+    #     done
+    # done
 
     for ratio in ${GAPBS_RATIOS}; do
         dram=$(gib_to_bytes ${GAPBS_DRAM[$ratio]})
@@ -106,27 +106,27 @@ case ${ABLATION} in
         echo "=== Ablation: CBA on vs CBA off ==="
         cd ${SRC_DIR} && make clean && make
         run_all_workloads "cba_on"
-        cd ${SRC_DIR} && make no-cba
-        run_all_workloads "cba_off"
+        # cd ${SRC_DIR} && make no-cba
+        # run_all_workloads "cba_off"
         ;;
     invert_sort)
         echo "=== Ablation: Normal vs Inverted Sort (no CBA) ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "normal"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "normal"
         cd ${SRC_DIR} && make invert-sort-no-cba
         run_all_workloads "invert_sort"
         ;;
     hcd)
         echo "=== Ablation: HCD on vs HCD off ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "hcd_on"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "hcd_on"
         cd ${SRC_DIR} && make no-hcd
         run_all_workloads "hcd_off"
         ;;
     sample_period)
         echo "=== Ablation: Normal vs High Sample Period ==="
-        cd ${SRC_DIR} && make clean && make
-        run_all_workloads "normal_sample"
+        # cd ${SRC_DIR} && make clean && make
+        # run_all_workloads "normal_sample"
         cd ${SRC_DIR} && make high-sample-period
         run_all_workloads "high_sample_period"
         ;;

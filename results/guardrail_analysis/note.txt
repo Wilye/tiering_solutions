@@ -1,0 +1,39 @@
+Uncore throttled, MBA throttled, and 20 threads
+Tuned DRAM access fraction guardrail to only fire during recency mode and below 0.9 of the EWMA
+
+CBA on vs CBA off dram access fraction results:
+- XSBench: more violations during CBA on because it's migrating less conservatively, so the startup transient noise takes longer to converge
+- Liblinear: CBA on: 1477 violations from repeated phase transitions, CBA off: 1634 violations
+- Silo's violations are from continuously shifting hotset
+
+High period sampling vs normal hotness score guardrail results:
+- GapBC BC: saw 72->32 violations, doesn't make sense, we'd expect more violations
+    - theory: 10x fewer samples, less accesses over all, so more intervals with 0 accesses at the boundary, so less violations
+    - 76.4% of intervals have zero accesses vs 27.4% with normal sampling
+
+GapBS-BC has a gradual distribution:
+  - Demoted pages have median score 0.67 — they're warm, not cold                                                                                                
+  - At the boundary, DRAM avg (1.63) and NVM avg (1.52) are nearly equal (ratio 0.93)
+  - 160 intervals where both sides have active accesses                                                                                                          
+  - The boundary guardrail fires because pages on both sides are genuinely similarly hot — it's detecting real ambiguity in the ranking                          
+                                                                                                                                                                 
+XSBench has a sharp distribution:                                                                                                                              
+  - Demoted pages have median score 0.00 — truly cold                                                                                                            
+  - Only 3 intervals where both sides have any accesses at all                                                                                                   
+  - When they do, DRAM side is 5x hotter than NVM side (ratio 0.20)                                                                                              
+  - The boundary guardrail almost never fires because there's a clear hot/cold divide 
+
+Liblinear with HCD off has significantly worse placement:                                                                                                      
+                                                                                                                                                                 
+  ┌─────────────────┬────────┬─────────┐                                                                                                                         
+  │     Metric      │ HCD On │ HCD Off │                                                                                                                         
+  ├─────────────────┼────────┼─────────┤                                                                                                                         
+  │ Mean fraction   │ 0.240  │ 0.098   │                                                                                                                         
+  ├─────────────────┼────────┼─────────┤                                                                                                                         
+  │ Median fraction │ 0.200  │ 0.000   │                                                                                                                         
+  ├─────────────────┼────────┼─────────┤                                                                                                                         
+  │ Intervals < 0.3 │ 62.1%  │ 85.3%   │                                                                                                                         
+  ├─────────────────┼────────┼─────────┤                                                                                                                         
+  │ Intervals < 0.1 │ 39.3%  │ 71.5%   │
+  └─────────────────┴────────┴─────────┘  
+

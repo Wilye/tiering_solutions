@@ -60,6 +60,8 @@ def collect_results(results_dir):
                     if not config_match:
                         break
                     config = config_match.group(1)
+                    if config == "normal":
+                        continue
                     key = (wl_key, ratio, config)
                     if key not in results:
                         results[key] = []
@@ -69,7 +71,11 @@ def collect_results(results_dir):
 
 
 def get_configs(results):
-    return sorted(set(c for (_, _, c) in results))
+    configs = sorted(set(c for (_, _, c) in results))
+    if "cba_on" in configs:
+        configs.remove("cba_on")
+        configs.insert(0, "cba_on")
+    return configs
 
 
 def plot_workload(results, results_dir, workload, workload_label):
@@ -78,25 +84,34 @@ def plot_workload(results, results_dir, workload, workload_label):
     if not ratios:
         return
 
-    color, edge_color = WORKLOAD_COLORS.get(workload, ("#D5E8D4", "#82B366"))
+    wl_color, wl_edge = WORKLOAD_COLORS.get(workload, ("#D5E8D4", "#82B366"))
     fig, ax = plt.subplots(figsize=(max(8, len(configs) * 2), 5))
 
     labels = []
     means = []
+    colors = []
+    edge_colors = []
     for ratio in ratios:
         for config in configs:
             key = (workload, ratio, config)
             if key in results:
-                config_label = config.replace('_', ' ').title()
+                config_label = ("Baseline" if config == "cba_on" else config.replace('_', ' ').title())
                 labels.append(config_label if len(ratios) == 1 else f"{ratio.replace('-', ':')}\n{config_label}")
                 means.append(np.mean(results[key]))
+                if config == "cba_on":
+                    colors.append("#C8C8C8")
+                    edge_colors.append("#808080")
+                else:
+                    colors.append(wl_color)
+                    edge_colors.append(wl_edge)
 
     if not labels:
         plt.close()
         return
 
     x = np.arange(len(labels))
-    ax.bar(x, means, 0.6, color=color, edgecolor=edge_color, hatch=HATCH, linewidth=1.2)
+    for i in range(len(labels)):
+        ax.bar(x[i], means[i], 0.6, color=colors[i], edgecolor=edge_colors[i], hatch=HATCH, linewidth=1.2)
     ax.set_ylabel('Violation Count')
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=8)
@@ -119,9 +134,13 @@ def plot_summary(results, results_dir):
         for config in configs:
             key = (workload, "1-8", config)
             if key in results:
-                config_label = config.replace('_', ' ').title()
+                config_label = ("Baseline" if config == "cba_on" else config.replace('_', ' ').title())
                 labels.append(f"{wl_label}\n{config_label}")
                 means.append(np.mean(results[key]))
+                if config == "cba_on":
+                    colors.append("#C8C8C8")
+                    edge_colors.append("#808080")
+                    continue
                 c, ec = WORKLOAD_COLORS.get(workload, ("#D5E8D4", "#82B366"))
                 colors.append(c)
                 edge_colors.append(ec)

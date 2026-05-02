@@ -1047,6 +1047,8 @@ void *pebs_policy_thread()
       cur_dram_bw = ((float)(measure_bw(0)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
       cur_nvm_bw = ((float)(measure_bw(1)) * (CACHELINE_SIZE)) / (1024ULL * 1024ULL * 1024ULL);
 
+      LOG_REPORT("DRAM_BW: %.3f GB/s (ewma=%.3f)\n", cur_dram_bw, dram_bw_ewma);
+
       // update the BW
       dram_bw_ewma = (1 - HCD_EWMA_ALPHA) * dram_bw_ewma + HCD_EWMA_ALPHA * cur_dram_bw;
       nvm_bw_ewma = (1 - HCD_EWMA_ALPHA) * nvm_bw_ewma + HCD_EWMA_ALPHA * cur_nvm_bw;
@@ -1056,7 +1058,7 @@ void *pebs_policy_thread()
       // --- Migration Effectiveness Guardrail ---
       // Only check during history mode - violations during recency mode are expected
       // because DRAM BW naturally drops during hot-set transitions
-      if (bias == hist_bias && prev_dram_bw_ewma > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
+      if (/* bias == hist_bias && */ prev_dram_bw_ewma > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
         float dram_bw_delta = cur_dram_bw - prev_dram_bw_ewma;
         if (dram_bw_delta <= 0) {
           mig_eff_violations++;
