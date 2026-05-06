@@ -1056,8 +1056,9 @@ void *pebs_policy_thread()
 
       #ifndef DISABLE_MIG_EFF_GUARDRAIL
       // --- Migration Effectiveness Guardrail ---
-      // Only check during history mode - violations during recency mode are expected
-      // because DRAM BW naturally drops during hot-set transitions
+      // Checks if DRAM bandwidth increases after a minimum of 5 migrations
+      // only checks during history mode, violations during recency mode are expected
+      // because DRAM BW naturally drops during hot set transitions
       if (bias == hist_bias && prev_dram_bw_ewma > 0 && mig_eff_migrations_since_bw_check >= MIG_EFF_MIN_MIGRATIONS) {
         float dram_bw_delta = cur_dram_bw - prev_dram_bw_ewma;
         if (dram_bw_delta <= 0) {
