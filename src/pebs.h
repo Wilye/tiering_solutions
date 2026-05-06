@@ -95,7 +95,7 @@
 #define WINDOW_SIZE   (2)
 
 // Bias values for history and recency
-#define HIST_BIAS_RECN  (0.4) // changed from 0.4
+#define HIST_BIAS_RECN  (0.4)
 #define HIST_BIAS       {HIST_BIAS_RECN, 1.-HIST_BIAS_RECN}
 //#define HIST_BIAS       {0.4, 0.6}  // Harmonic progression (1/3, 1/2)
 
